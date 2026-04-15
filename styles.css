@@ -256,6 +256,11 @@ td:first-child {
   font-weight: 700;
 }
 
+.score-cell,
+.ob-score {
+  display: none !important;
+}
+
 .title-column {
   width: 32%;
 }

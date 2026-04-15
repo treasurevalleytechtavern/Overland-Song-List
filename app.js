@@ -1,5 +1,6 @@
 const maxRenderedRows = 300;
 const minimumSearchLength = 2;
+const fuzzyResultLimit = 80;
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -19,7 +20,13 @@ function normalize(value) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
+}
+
+function tokenize(value) {
+  return normalize(value).split(" ").filter(Boolean);
 }
 
 function parsePopularity(value) {
@@ -42,15 +49,103 @@ function findHeader(headers, candidates) {
 function indexSongs(nextSongs) {
   return nextSongs
     .filter((song) => song.title || song.artist)
-    .map((song) => ({
-      title: String(song.title || "").trim(),
-      artist: String(song.artist || "").trim(),
-      popularity: String(song.popularity || "").trim(),
-      popularityScore: parsePopularity(song.popularity),
-      categories: String(song.categories || "").trim(),
-      searchText: normalize((song.title || "") + " " + (song.artist || "") + " " + (song.categories || ""))
-    }))
+    .map((song) => {
+      const title = String(song.title || "").trim();
+      const artist = String(song.artist || "").trim();
+      const popularity = String(song.popularity || "").trim();
+      const categories = String(song.categories || "").trim();
+      const searchText = normalize(`${title} ${artist} ${categories}`);
+
+      return {
+        title,
+        artist,
+        popularity,
+        popularityScore: parsePopularity(popularity),
+        categories,
+        searchText,
+        titleStarts: normalize(title),
+        artistStarts: normalize(artist),
+        fuzzyTerms: Array.from(new Set(tokenize(`${title} ${artist} ${categories}`)))
+      };
+    })
     .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+}
+
+function editDistanceWithin(a, b, maxDistance) {
+  if (Math.abs(a.length - b.length) > maxDistance) {
+    return maxDistance + 1;
+  }
+
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+
+  for (let row = 1; row <= a.length; row += 1) {
+    const current = [row];
+    let rowMinimum = current[0];
+
+    for (let column = 1; column <= b.length; column += 1) {
+      const cost = a[row - 1] === b[column - 1] ? 0 : 1;
+      const value = Math.min(
+        previous[column] + 1,
+        current[column - 1] + 1,
+        previous[column - 1] + cost
+      );
+
+      current[column] = value;
+      rowMinimum = Math.min(rowMinimum, value);
+    }
+
+    if (rowMinimum > maxDistance) {
+      return maxDistance + 1;
+    }
+
+    previous = current;
+  }
+
+  return previous[b.length];
+}
+
+function allowedTypoDistance(term) {
+  if (term.length < 4) {
+    return 0;
+  }
+
+  if (term.length < 8) {
+    return 1;
+  }
+
+  return 2;
+}
+
+function fuzzyRank(song, queryTerms) {
+  let totalDistance = 0;
+
+  for (const queryTerm of queryTerms) {
+    const maxDistance = allowedTypoDistance(queryTerm);
+    let bestDistance = maxDistance + 1;
+
+    for (const songTerm of song.fuzzyTerms) {
+      if (songTerm.includes(queryTerm) || queryTerm.includes(songTerm)) {
+        bestDistance = 0;
+        break;
+      }
+
+      if (maxDistance > 0) {
+        bestDistance = Math.min(bestDistance, editDistanceWithin(queryTerm, songTerm, maxDistance));
+      }
+
+      if (bestDistance === 0) {
+        break;
+      }
+    }
+
+    if (bestDistance > maxDistance) {
+      return null;
+    }
+
+    totalDistance += bestDistance;
+  }
+
+  return totalDistance;
 }
 
 function escapeHtml(value) {
@@ -112,7 +207,34 @@ function render() {
     return;
   }
 
-  const matches = songs.filter((song) => song.searchText.includes(normalizedQuery));
+  const queryTerms = tokenize(query);
+  let matches = songs.filter((song) => song.searchText.includes(normalizedQuery));
+  let usedTypoMatching = false;
+
+  if (queryTerms.length && matches.length < maxRenderedRows) {
+    const exactMatches = new Set(matches);
+    const fuzzyMatches = [];
+
+    for (const song of songs) {
+      if (exactMatches.has(song)) {
+        continue;
+      }
+
+      const rank = fuzzyRank(song, queryTerms);
+
+      if (rank !== null) {
+        fuzzyMatches.push({ song, rank });
+      }
+    }
+
+    fuzzyMatches
+      .sort((a, b) => a.rank - b.rank || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+      .slice(0, fuzzyResultLimit)
+      .forEach((match) => matches.push(match.song));
+
+    usedTypoMatching = fuzzyMatches.length > 0;
+  }
+
   const visibleMatches = matches.slice(0, maxRenderedRows);
 
   resultsBody.innerHTML = visibleMatches.map((song) => `
@@ -125,7 +247,8 @@ function render() {
 
   emptyState.hidden = matches.length !== 0;
   const shownText = matches.length > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
-  resultCount.textContent = `${matches.length.toLocaleString()} song${matches.length === 1 ? "" : "s"}${shownText}`;
+  const typoText = usedTypoMatching ? " including close matches" : "";
+  resultCount.textContent = `${matches.length.toLocaleString()} song${matches.length === 1 ? "" : "s"}${typoText}${shownText}`;
 }
 
 function parseCsv(csvText) {
