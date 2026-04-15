@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overland Karaoke Song Search</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="search-band" aria-labelledby="page-title">
+        <div class="brand-row">
+          <img class="brand-mark" src="assets/overland-bar-logo.png" alt="Overland Bar">
+          <div>
+            <p class="eyebrow">Overland karaoke</p>
+            <h1 id="page-title">Search the karaoke book.</h1>
+          </div>
+        </div>
+
+        <div class="search-panel" role="search">
+          <label for="song-search">Search by title or artist</label>
+          <div class="search-row">
+            <input
+              id="song-search"
+              type="search"
+              autocomplete="off"
+              placeholder="Search by song or artist"
+              aria-describedby="result-count"
+            >
+            <button id="clear-search" type="button">Clear</button>
+          </div>
+        </div>
+
+        <p class="helper-copy">
+          Pick your song, tell the host, and get ready.
+        </p>
+      </section>
+
+      <section class="results-band" aria-labelledby="results-title">
+        <div class="summary-row">
+          <div>
+            <p class="eyebrow">Song book</p>
+            <h2 id="results-title">Available songs</h2>
+          </div>
+          <p id="result-count" class="result-count" aria-live="polite">Loading songs...</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Artist</th>
+              </tr>
+            </thead>
+            <tbody id="song-results"></tbody>
+          </table>
+          <p id="empty-state" class="empty-state" hidden>No songs match that search.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

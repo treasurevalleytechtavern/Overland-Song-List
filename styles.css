@@ -1,0 +1,280 @@
+:root {
+  color-scheme: dark;
+  --black: #050505;
+  --charcoal: #121212;
+  --panel: #181818;
+  --line: #303030;
+  --white: #f2f2f2;
+  --muted: #b9b9b9;
+  --cyan: #31e8ff;
+  --red: #ff4662;
+  --gold: #ffd12a;
+  --shadow: 0 18px 46px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--black);
+  color: var(--white);
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.42), var(--black) 42%),
+    radial-gradient(circle at 22% 18%, rgba(49, 232, 255, 0.12), transparent 26%),
+    radial-gradient(circle at 74% 8%, rgba(255, 70, 98, 0.1), transparent 24%),
+    var(--black);
+}
+
+.search-band {
+  display: grid;
+  gap: 24px;
+  padding: 32px max(18px, calc((100vw - 1120px) / 2)) 30px;
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.78)),
+    url("assets/overland-bar-logo.png") right 7vw center / min(34vw, 390px) auto no-repeat;
+}
+
+.brand-row,
+.summary-row,
+.search-row {
+  display: flex;
+  align-items: center;
+}
+
+.brand-row {
+  gap: 18px;
+}
+
+.brand-mark {
+  width: min(320px, 54vw);
+  max-height: 150px;
+  border-radius: 8px;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 12px rgba(49, 232, 255, 0.5))
+    drop-shadow(0 0 18px rgba(255, 70, 98, 0.25));
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--cyan);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(49, 232, 255, 0.74);
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 780px;
+  font-size: clamp(2rem, 7vw, 4.4rem);
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.36);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+}
+
+.search-panel {
+  display: grid;
+  gap: 10px;
+  max-width: 880px;
+}
+
+.search-panel label {
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.search-row {
+  gap: 10px;
+  align-items: stretch;
+}
+
+#song-search {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid rgba(49, 232, 255, 0.72);
+  border-radius: 8px;
+  padding: 0 18px;
+  background: rgba(12, 12, 12, 0.9);
+  color: var(--white);
+  box-shadow:
+    0 0 0 1px rgba(49, 232, 255, 0.14),
+    0 0 24px rgba(49, 232, 255, 0.14),
+    var(--shadow);
+}
+
+#song-search::placeholder {
+  color: #8f8f8f;
+}
+
+#song-search:focus {
+  border-color: var(--cyan);
+  outline: 3px solid rgba(49, 232, 255, 0.22);
+}
+
+button {
+  min-height: 44px;
+  border: 1px solid rgba(255, 70, 98, 0.82);
+  border-radius: 8px;
+  padding: 0 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 70, 98, 0.14);
+  color: var(--white);
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 18px rgba(255, 70, 98, 0.18);
+}
+
+button:hover {
+  background: rgba(255, 70, 98, 0.26);
+}
+
+#clear-search {
+  min-width: 96px;
+}
+
+.helper-copy {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.results-band {
+  padding: 30px max(18px, calc((100vw - 1120px) / 2)) 48px;
+}
+
+.summary-row {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.result-count {
+  min-width: 136px;
+  margin: 0;
+  color: var(--gold);
+  font-weight: 700;
+  text-align: right;
+  text-shadow: 0 0 14px rgba(255, 209, 42, 0.35);
+}
+
+.table-wrap {
+  position: relative;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(18, 18, 18, 0.92);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #101010;
+  color: var(--cyan);
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: rgba(49, 232, 255, 0.08);
+}
+
+td:first-child {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 28px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+mark {
+  border-radius: 4px;
+  padding: 0 2px;
+  background: rgba(255, 209, 42, 0.35);
+  color: inherit;
+}
+
+@media (max-width: 760px) {
+  .search-band {
+    padding-top: 24px;
+    background:
+      linear-gradient(180deg, rgba(5, 5, 5, 0.9), rgba(5, 5, 5, 0.96)),
+      url("assets/overland-bar-logo.png") right 18px top 18px / 145px auto no-repeat;
+  }
+
+  .brand-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .brand-mark {
+    width: min(260px, 72vw);
+    max-height: 118px;
+  }
+
+  .search-row,
+  .summary-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #clear-search,
+  .result-count {
+    width: 100%;
+    text-align: left;
+  }
+}
