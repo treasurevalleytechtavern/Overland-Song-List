@@ -1,6 +1,7 @@
 const maxRenderedRows = 300;
 const minimumSearchLength = 2;
 
+const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
 const clearButton = document.querySelector("#clear-search");
 const resultsBody = document.querySelector("#song-results");
@@ -22,14 +23,20 @@ function normalize(value) {
 }
 
 function parsePopularity(value) {
-  const score = Number.parseFloat(String(value || "").replace(/[^0-9.-]/g, ""));
-  return Number.isFinite(score) ? score : 0;
+  const score = parseFloat(String(value || "").replace(/[^0-9.-]/g, ""));
+  return isFinite(score) ? score : 0;
 }
 
 function findHeader(headers, candidates) {
-  return candidates
-    .map((candidate) => headers.indexOf(candidate))
-    .find((index) => index !== -1) ?? -1;
+  for (let index = 0; index < candidates.length; index += 1) {
+    const headerIndex = headers.indexOf(candidates[index]);
+
+    if (headerIndex !== -1) {
+      return headerIndex;
+    }
+  }
+
+  return -1;
 }
 
 function indexSongs(nextSongs) {
@@ -41,7 +48,7 @@ function indexSongs(nextSongs) {
       popularity: String(song.popularity || "").trim(),
       popularityScore: parsePopularity(song.popularity),
       categories: String(song.categories || "").trim(),
-      searchText: normalize(`${song.title} ${song.artist} ${song.categories}`)
+      searchText: normalize((song.title || "") + " " + (song.artist || "") + " " + (song.categories || ""))
     }))
     .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
 }
@@ -86,7 +93,6 @@ function renderPopularSongs() {
     <tr>
       <td data-label="Title">${escapeHtml(song.title)}</td>
       <td data-label="Artist">${escapeHtml(song.artist)}</td>
-      <td class="score-cell" data-label="Score">${escapeHtml(song.popularity || "-")}</td>
       <td data-label="Categories">${escapeHtml(song.categories || "-")}</td>
     </tr>
   `).join("");
@@ -113,7 +119,6 @@ function render() {
     <tr>
       <td data-label="Title">${highlight(song.title, query)}</td>
       <td data-label="Artist">${highlight(song.artist, query)}</td>
-      <td class="score-cell" data-label="Score">${escapeHtml(song.popularity || "-")}</td>
       <td data-label="Categories">${highlight(song.categories || "-", query)}</td>
     </tr>
   `).join("");
@@ -160,7 +165,8 @@ function parseCsv(csvText) {
   }
 
   const nonEmptyRows = rows.filter((items) => items.some((item) => item.trim()));
-  const headers = nonEmptyRows.shift()?.map((item) => normalize(item)) || [];
+  const headerRow = nonEmptyRows.shift() || [];
+  const headers = headerRow.map((item) => normalize(item));
   const titleIndex = headers.indexOf("title");
   const artistIndex = headers.indexOf("artist");
   const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
@@ -213,6 +219,22 @@ searchInput.addEventListener("input", () => {
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(render, 80);
 });
+
+searchInput.addEventListener("search", render);
+searchInput.addEventListener("change", render);
+searchInput.addEventListener("keyup", (event) => {
+  if (event.key === "Enter") {
+    render();
+  }
+});
+
+if (searchForm) {
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    window.clearTimeout(searchTimer);
+    render();
+  });
+}
 
 clearButton.addEventListener("click", () => {
   searchInput.value = "";

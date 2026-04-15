@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <div class="search-panel" role="search">
+        <form class="search-panel" id="song-search-form" role="search">
           <label for="song-search">Search by title, artist, or category</label>
           <div class="search-row">
             <input
@@ -29,28 +29,7 @@
             >
             <button id="clear-search" type="button">Clear</button>
           </div>
-        </div>
-
-        <section class="popular-panel" aria-labelledby="popular-title">
-          <div class="popular-heading">
-            <p class="eyebrow">Top picks</p>
-            <h2 id="popular-title">20 most popular songs</h2>
-          </div>
-          <div class="table-wrap compact-table">
-            <table>
-              <thead>
-                <tr>
-                  <th class="title-column" scope="col">Title</th>
-                  <th class="artist-column" scope="col">Artist</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Categories</th>
-                </tr>
-              </thead>
-              <tbody id="popular-results"></tbody>
-            </table>
-            <p id="popular-empty-state" class="empty-state" hidden>Popular songs will appear after the song list loads.</p>
-          </div>
-        </section>
+        </form>
 
         <p class="helper-copy">
           Pick your song, tell the host, and get ready.
@@ -72,13 +51,34 @@
               <tr>
                 <th class="title-column" scope="col">Title</th>
                 <th class="artist-column" scope="col">Artist</th>
-                <th scope="col">Score</th>
                 <th scope="col">Categories</th>
               </tr>
             </thead>
             <tbody id="song-results"></tbody>
           </table>
           <p id="empty-state" class="empty-state" hidden>No songs match that search.</p>
+        </div>
+      </section>
+
+      <section class="popular-band" aria-labelledby="popular-title">
+        <div class="popular-panel">
+          <div class="popular-heading">
+            <p class="eyebrow">Top picks</p>
+            <h2 id="popular-title">20 most popular songs</h2>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="title-column" scope="col">Title</th>
+                  <th class="artist-column" scope="col">Artist</th>
+                  <th scope="col">Categories</th>
+                </tr>
+              </thead>
+              <tbody id="popular-results"></tbody>
+            </table>
+            <p id="popular-empty-state" class="empty-state" hidden>Popular songs will appear after the song list loads.</p>
+          </div>
         </div>
       </section>
     </main>

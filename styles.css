@@ -29,6 +29,10 @@ input {
   font: inherit;
 }
 
+form {
+  margin: 0;
+}
+
 .app-shell {
   min-height: 100vh;
   background:
@@ -168,6 +172,10 @@ button:hover {
   max-width: 1040px;
 }
 
+.popular-band {
+  padding: 0 max(18px, calc((100vw - 1120px) / 2)) 48px;
+}
+
 .popular-heading h2 {
   font-size: clamp(1.25rem, 3vw, 1.8rem);
 }
@@ -261,20 +269,8 @@ td:first-child {
   padding: 12px 14px;
 }
 
-.score-cell {
-  width: 90px;
-  color: var(--gold);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
 th:nth-child(3),
 td:nth-child(3) {
-  width: 90px;
-}
-
-th:nth-child(4),
-td:nth-child(4) {
   width: 240px;
 }
 
@@ -358,8 +354,7 @@ mark {
     min-width: 0;
   }
 
-  td:nth-child(3),
-  td:nth-child(4) {
+  td:nth-child(3) {
     grid-column: 1 / -1;
   }
 
@@ -373,7 +368,4 @@ mark {
     text-transform: uppercase;
   }
 
-  .score-cell {
-    width: auto;
-  }
 }
