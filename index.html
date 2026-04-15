@@ -18,18 +18,39 @@
         </div>
 
         <div class="search-panel" role="search">
-          <label for="song-search">Search by title or artist</label>
+          <label for="song-search">Search by title, artist, or category</label>
           <div class="search-row">
             <input
               id="song-search"
               type="search"
               autocomplete="off"
-              placeholder="Search by song or artist"
+              placeholder="Search by song, artist, or category"
               aria-describedby="result-count"
             >
             <button id="clear-search" type="button">Clear</button>
           </div>
         </div>
+
+        <section class="popular-panel" aria-labelledby="popular-title">
+          <div class="popular-heading">
+            <p class="eyebrow">Top picks</p>
+            <h2 id="popular-title">20 most popular songs</h2>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="title-column" scope="col">Title</th>
+                  <th class="artist-column" scope="col">Artist</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Categories</th>
+                </tr>
+              </thead>
+              <tbody id="popular-results"></tbody>
+            </table>
+            <p id="popular-empty-state" class="empty-state" hidden>Popular songs will appear after the song list loads.</p>
+          </div>
+        </section>
 
         <p class="helper-copy">
           Pick your song, tell the host, and get ready.
@@ -49,8 +70,10 @@
           <table>
             <thead>
               <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Artist</th>
+                <th class="title-column" scope="col">Title</th>
+                <th class="artist-column" scope="col">Artist</th>
+                <th scope="col">Score</th>
+                <th scope="col">Categories</th>
               </tr>
             </thead>
             <tbody id="song-results"></tbody>

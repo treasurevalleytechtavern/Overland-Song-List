@@ -1,80 +1,519 @@
-title,artist
-Don't You Remember,Adele
-Oh My God,Adele
-Take It All,Adele
-Bang!,AJR
-Way Less Sad,AJR
-Valerie,Amy Winehouse
-Quizás quizás quizás,Andrea Bocelli & Jennifer Lopez
-Rattlesnake Preacher,Ashley McBryde
-Wish You Were Gay,Billie Eilish
-Piano Man,Billy Joel
-Vienna,Billy Joel
-We Didn't Start the Fire,Billy Joel
-Electric Funeral,Black Sabbath
-In the End,Black Veil Brides
-Mutt,Blink-182
-High School Never Ends,Bowling for Soup
-Dreams,Brandi Carlile
-Bodak Yellow,Cardi B
-Before He Cheats,Carrie Underwood
-Picture You,Chappell Roan
-23,Chayce Beckham
-Tennessee Whiskey,Chris Stapleton
-A Quick Death in Texas,Clutch
-Electric Worry,Clutch
-The Regulator,Clutch
-Strawberry Wine,Deanna Carter
-Jolene,Dolly Parton
-All of You,Encanto
-Surface Pressure,Encanto
-Waiting on a Miracle,Encanto
-We Don't Talk About Bruno,Encanto
-What Else Can I Do,Encanto
-I Don't Care,Fall Out Boy
-Bathroom Wall,Faster Pussycat
-Drunken Lullabies,Flogging Molly
-Cosmic Love,Florence + The Machine
-Friends in Low Places,Garth Brooks
-Dinosaur,Hank Williams Jr.
-Red White & Pink-Slip Blues,Hank Williams Jr.
-Me and Bobby McGee,Janis Joplin
-Ring of Fire,Johnny Cash
-Don't Stop Believin',Journey
-Teeth,Lady Gaga
-Old Town Road (Remix),Lil Nas X
-Do You Sleep,Lisa Loeb
-Stay (I Missed You),Lisa Loeb
-Still Bad,Lizzo
-Ain't No Love in Oklahoma,Luke Combs
-Back in the Saddle,Luke Combs
-Be by You,Luke Combs
-Days Like These,Luke Combs
-The Spins,Mac Miller
-Anxiety,Megan Thee Stallion
-Bitch ,Meredith Brooks
-Black Sheep,Metric
-Quizás quizás quizás,Michael Bublé
-Cheatin' Songs,Midland
-Sweet Caroline,Neil Diamond
-Vampire,Olivia Rodrigo
-Leave a Light On (Talk Away the Dark),Papa Roach
-What About Us,Pink
-Missin' You Like This,Post Malone
-Bohemian Rhapsody,Queen
-Ooh La La,Run the Jewels
-Can't Blame a Girl for Trying,Sabrina Carpenter
-Juno,Sabrina Carpenter
-Manchild,Sabrina Carpenter
-Man! I Feel Like a Woman!,Shania Twain
-Monsters,Shinedown
-Fuck Her Gently,Tenacious D
-Crush,Tessa Violet
-Something Just Like This,The Chainsmokers
-Mr. Brightside,The Killers
-Rocks Off,The Rolling Stones
-Hate My Life,Theory of a Deadman
-Bustin' List,Tyler Childers
-Weeping Willow,Warren Zeiders
-I Wanna Dance with Somebody,Whitney Houston
-WWE Sexy Boy,WWE (Shawn Michaels)
+title,artist,popularity score,categories
+All Mixed Up,311,88,ALT
+Amber,311,89,ALT|EASY WIN
+Down,311,90,ALT|PARTY
+Don't Stop, Fleetwood Mac,93,CLASSIC|ANTHEM|GROUP SONG
+Here Without You,3 Doors Down,86,ROCK|BALLAD
+Kryptonite,3 Doors Down,90,ROCK|EASY WIN
+What's Up?,4 Non Blondes,85,ANTHEM|EMO/ALT|GROUP SONG
+Candy Shop,50 Cent,90,HIP-HOP|PARTY
+In Da Club,50 Cent,94,HIP-HOP|ANTHEM|GROUP SONG
+Many Men,50 Cent,88,HIP-HOP
+Dancing Queen,ABBA,96,ANTHEM|GROUP SONG
+Gimme! Gimme! Gimme!,ABBA,93,PARTY
+Lay All Your Love on Me,ABBA,90,POP
+Mamma Mia,ABBA,94,ANTHEM|GROUP SONG
+Super Trouper,ABBA,91,POP
+Take a Chance on Me,ABBA,93,GROUP SONG
+Waterloo,ABBA,92,POP|PARTY
+Back in Black,AC/DC,94,ROCK|ANTHEM
+Thunderstruck,AC/DC,92,ROCK|ANTHEM
+You Shook Me All Night Long,AC/DC,95,ROCK|PARTY|GROUP SONG
+Rolling in the Deep,Adele,94,BALLAD|FEMALE POWER|SHOWSTOPPER
+Take On Me,a-ha,92,POP|ANTHEM|GROUP SONG
+Chattahoochee,Alan Jackson,94,COUNTRY|ANTHEM|GROUP SONG
+Drive (For Daddy Gene),Alan Jackson,89,COUNTRY|BALLAD
+Remember When,Alan Jackson,90,COUNTRY|BALLAD
+It's Five O'Clock Somewhere,Alan Jackson & Jimmy Buffett,92,COUNTRY|PARTY|GROUP SONG
+You Oughta Know,Alanis Morissette,85,FEMALE POWER|EMO/ALT
+No One,Alicia Keys,81,BALLAD|FEMALE POWER
+Dear Maria Count Me In,All Time Low,90,EMO/ALT|GROUP SONG
+Best Day of My Life,American Authors,90,POP|ANTHEM
+Valerie,Amy Winehouse,94,POP|EASY WIN|VIBE
+505,Arctic Monkeys,89,ALT|GROUP SONG
+Are You Mine?,Arctic Monkeys,89,ALT
+Do I Wanna Know?,Arctic Monkeys,92,ALT|MALE SHOWCASE
+Fluorescent Adolescent,Arctic Monkeys,91,ALT|GROUP SONG
+Why'd You Only Call Me When You're High?,Arctic Monkeys,90,ALT
+Respect,Aretha Franklin,85,FEMALE POWER|CLASSIC
+Complicated,Avril Lavigne,90,POP|EMO/ALT
+Sk8er Boi,Avril Lavigne,92,POP|EMO/ALT|PARTY
+Everybody (Backstreet's Back),Backstreet Boys,93,POP|PARTY|GROUP SONG
+I Want It That Way,Backstreet Boys,95,POP|ANTHEM|GROUP SONG
+Meant to Be,Bebe Rexha & Florida Georgia Line,91,POP|COUNTRY
+Stayin' Alive,Bee Gees,92,DISCO|PARTY
+Run the World (Girls),Beyonce,92,POP|ANTHEM|FEMALE POWER
+Single Ladies,Beyonce,94,POP|ANTHEM|FEMALE POWER|GROUP SONG
+Crazy in Love,Beyonce ft. Jay-Z,80,POP|PARTY|FEMALE POWER
+Save a Horse (Ride a Cowboy),Big & Rich,94,COUNTRY|PARTY|GROUP SONG
+Good Directions,Billy Currington,90,COUNTRY|EASY WIN
+Must Be Doin' Somethin' Right,Billy Currington,88,COUNTRY|BALLAD
+People Are Crazy,Billy Currington,89,COUNTRY|FUN
+Piano Man,Billy Joel,95,ANTHEM|GROUP SONG|CLASSIC
+Boom Boom Pow,Black Eyed Peas,91,POP|PARTY
+I Gotta Feeling,Black Eyed Peas,96,POP|PARTY|ANTHEM|GROUP SONG
+No Diggity,Blackstreet,91,HIP-HOP|PARTY|GROUP SONG
+Austin,Blake Shelton,89,COUNTRY|BALLAD
+Boys 'Round Here,Blake Shelton,91,COUNTRY|PARTY|GROUP SONG
+God Gave Me You,Blake Shelton,88,COUNTRY|BALLAD
+Hillbilly Bone,Blake Shelton,90,COUNTRY|PARTY|GROUP SONG
+Honey Bee,Blake Shelton,90,COUNTRY|FUN
+Ol' Red,Blake Shelton,91,COUNTRY|STORY SONG
+Some Beach,Blake Shelton,89,COUNTRY|FUN
+No Rain,Blind Melon,90,ALT|GROUP SONG
+Adam's Song,Blink-182,85,EMO/ALT|BALLAD
+All the Small Things,Blink-182,90,EMO/ALT|GROUP SONG|PARTY
+First Date,Blink-182,88,EMO/ALT|FUN
+I Miss You,Blink-182,91,EMO/ALT|ANTHEM
+What's My Age Again?,Blink-182,90,EMO/ALT|GROUP SONG
+Hooked on a Feeling,Blue Swede,92,CLASSIC|FUN|GROUP SONG
+Livin' on a Prayer,Bon Jovi,96,ROCK|ANTHEM|GROUP SONG
+Total Eclipse of the Heart,Bonnie Tyler,91,BALLAD|SHOWSTOPPER
+1985,Bowling for Soup,90,EMO/ALT|FUNNY/NOVELTY
+Hit Me Baby One More Time,Britney Spears,93,POP|FEMALE POWER|PARTY
+Oops!... I Did It Again,Britney Spears,91,POP|FEMALE POWER
+Toxic,Britney Spears,92,POP|FEMALE POWER|PARTY
+Boot Scootin' Boogie,Brooks & Dunn,93,COUNTRY|PARTY|GROUP SONG
+Brand New Man,Brooks & Dunn,89,COUNTRY|PARTY
+Cowgirls Don't Cry,Brooks & Dunn,87,COUNTRY|BALLAD
+My Maria,Brooks & Dunn,90,COUNTRY|PARTY
+Neon Moon,Brooks & Dunn,92,COUNTRY|BALLAD|GROUP SONG
+Play Something Country,Brooks & Dunn,90,COUNTRY|PARTY
+Yeah,Brooks & Dunn,92,COUNTRY|PARTY
+24K Magic,Bruno Mars,93,POP|PARTY
+Grenade,Bruno Mars,88,POP|BALLAD
+Just the Way You Are,Bruno Mars,89,POP|BALLAD
+Locked Out of Heaven,Bruno Mars,92,POP|PARTY
+Treasure,Bruno Mars,90,POP|PARTY
+Call Me Maybe,Carly Rae Jepsen,94,POP|FUN|GROUP SONG
+Before He Cheats,Carrie Underwood,96,COUNTRY|FEMALE POWER|ANTHEM
+Yeah 3x,Chris Brown,91,POP|PARTY
+Tennessee Whiskey,Chris Stapleton,94,COUNTRY|BALLAD|MALE SHOWCASE
+Beautiful,Christina Aguilera,88,POP|BALLAD
+Dirrty,Christina Aguilera,91,POP|PARTY
+Genie in a Bottle,Christina Aguilera,90,POP|FEMALE POWER
+Accidentally in Love,Counting Crows,90,POP|GROUP SONG
+Mr. Jones,Counting Crows,83,ROCK|GROUP SONG
+Cupid Shuffle,Cupid,92,PARTY|GROUP SONG
+Girls Just Want to Have Fun,Cyndi Lauper,94,POP|ANTHEM|FEMALE POWER
+Tequila,Dan + Shay,89,COUNTRY|BALLAD
+Wagon Wheel,Darius Rucker,96,COUNTRY|ANTHEM|GROUP SONG
+Hands Down,Dashboard Confessional,86,EMO/ALT
+Vindicated,Dashboard Confessional,87,EMO/ALT
+Ants Marching,Dave Matthews Band,91,ALT|GROUP SONG
+Crash Into Me,Dave Matthews Band,90,ALT|BALLAD
+Dreaming Tree,Dave Matthews Band,85,ALT|DEEP CUT
+Grey Street,Dave Matthews Band,88,ALT
+Satellite,Dave Matthews Band,87,ALT
+Dust on the Bottle,David Lee Murphy,91,COUNTRY|ANTHEM|GROUP SONG
+Strawberry Wine,Deana Carter,88,COUNTRY|BALLAD
+Pour Some Sugar on Me,Def Leppard,92,ROCK|PARTY
+Say My Name,Destiny's Child,93,POP|GROUP SONG|FEMALE POWER
+Come On Eileen,Dexys Midnight Runners,92,CLASSIC|PARTY|GROUP SONG
+Drunk on a Plane,Dierks Bentley,90,COUNTRY|PARTY
+Cha Cha Slide,DJ Casper,93,PARTY|GROUP SONG
+Cake by the Ocean,DNCE,92,POP|PARTY|GROUP SONG
+American Pie,Don McLean,86,CLASSIC|GROUP SONG
+No Doubt,Don't Speak,88,POP|BALLAD
+God's Plan,Drake,89,HIP-HOP
+Hotline Bling,Drake,90,HIP-HOP|EASY WIN
+Nice for What,Drake,90,HIP-HOP|PARTY
+One Dance,Drake,89,HIP-HOP|VIBE
+Started From the Bottom,Drake,90,HIP-HOP
+Barbra Streisand,Duck Sauce,88,PARTY|NOVELTY
+Hotel California,Eagles,95,ANTHEM|GROUP SONG
+Life in the Fast Lane,Eagles,90,ROCK
+Take It Easy,Eagles,92,CLASSIC|GROUP SONG
+September,Earth Wind & Fire,86,PARTY|GROUP SONG
+Perfect,Ed Sheeran,89,POP|BALLAD
+Shape of You,Ed Sheeran,93,POP|PARTY
+Thinking Out Loud,Ed Sheeran,88,POP|BALLAD
+Take Me Home Tonight,Eddie Money,90,CLASSIC|PARTY
+Home,Edward Sharpe & The Magnetic Zeros,88,INDIE|GROUP SONG
+Don't Bring Me Down,ELO,92,CLASSIC|PARTY
+Mr. Blue Sky,ELO,93,CLASSIC|GROUP SONG
+Lose Yourself,Eminem,89,HIP-HOP|MALE SHOWCASE
+Walking on a Dream,Empire of the Sun,90,INDIE|PARTY
+Drink in My Hand,Eric Church,90,COUNTRY|PARTY
+Springsteen,Eric Church,88,COUNTRY|BALLAD
+Talladega,Eric Church,87,COUNTRY|BALLAD
+Inside Out,Eve 6,89,ROCK|GROUP SONG
+Dance Dance,Fall Out Boy,87,EMO/ALT|PARTY
+Sugar  We're Goin Down,Fall Out Boy,90,EMO/ALT|GROUP SONG|ANTHEM
+Sugar We're Goin Down,Fall Out Boy,90,EMO/ALT|GROUP SONG
+Thnks fr th Mmrs,Fall Out Boy,88,EMO/ALT|GROUP SONG
+Dreams,Fleetwood Mac,92,CLASSIC|VIBE
+Go Your Own Way,Fleetwood Mac,92,CLASSIC|GROUP SONG
+Landslide,Fleetwood Mac,91,BALLAD
+Rhiannon,Fleetwood Mac,90,CLASSIC
+Low,Flo Rida ft. T-Pain,94,HIP-HOP|PARTY|GROUP SONG
+Cosmic Love,Florence + The Machine,87,ALT
+Dog Days Are Over,Florence + The Machine,92,ALT|ANTHEM|GROUP SONG
+Shake It Out,Florence + The Machine,90,ALT
+Cruise,Florida Georgia Line,89,COUNTRY|PARTY
+Cruise Remix,Florida Georgia Line ft. Nelly,90,COUNTRY|HIP-HOP|PARTY
+Best of You,Foo Fighters,90,ROCK|ANTHEM
+Everlong,Foo Fighters,89,ROCK|EMO/ALT
+My Hero,Foo Fighters,87,ROCK
+The Pretender,Foo Fighters,88,ROCK
+Pumped Up Kicks,Foster The People,91,ALT|GROUP SONG
+Sit Next to Me,Foster The People,88,ALT
+Stacy's Mom,Fountains of Wayne,91,FUNNY/NOVELTY|GROUP SONG
+Take Me Out,Franz Ferdinand,91,ALT|PARTY
+Killing Me Softly,Fugees,90,HIP-HOP|BALLAD
+Carry On,fun.,89,POP|ANTHEM
+Some Nights,fun.,91,POP|GROUP SONG
+We Are Young,fun.,92,POP|ANTHEM|GROUP SONG
+Mask Off,Future,90,HIP-HOP
+Callin' Baton Rouge,Garth Brooks,94,COUNTRY|PARTY|GROUP SONG
+Friends in Low Places,Garth Brooks,99,COUNTRY|ANTHEM|GROUP SONG
+Much Too Young,Garth Brooks,88,COUNTRY
+The Dance,Garth Brooks,92,COUNTRY|BALLAD|SHOWSTOPPER
+Thunder Rolls,Garth Brooks,92,COUNTRY|BALLAD
+Budapest,George Ezra,88,EASY WIN
+Green Green Grass,George Ezra,88,POP|PARTY
+Shotgun,George Ezra,89,POP|EASY WIN
+All My Ex's Live in Texas,George Strait,91,COUNTRY|ANTHEM|GROUP SONG
+Amarillo By Morning,George Strait,90,COUNTRY|CLASSIC
+Check Yes or No,George Strait,92,COUNTRY|ANTHEM|GROUP SONG
+The Chair,George Strait,87,COUNTRY|CLASSIC
+Write This Down,George Strait,89,COUNTRY|EASY WIN
+I Will Survive,Gloria Gaynor,91,FEMALE POWER|ANTHEM|DISCO
+Black Balloon,Goo Goo Dolls,85,ROCK
+Iris,Goo Goo Dolls,87,BALLAD|EMO/ALT
+Slide,Goo Goo Dolls,88,ROCK
+Lifestyles of the Rich & Famous,Good Charlotte,88,EMO/ALT|FUN
+The Anthem,Good Charlotte,89,EMO/ALT|GROUP SONG
+Somebody That I Used to Know,Gotye ft. Kimbra,93,DUET|ANTHEM
+American Idiot,Green Day,90,EMO/ALT|ANTHEM
+Basket Case,Green Day,92,EMO/ALT|ANTHEM|GROUP SONG
+Boulevard of Broken Dreams,Green Day,91,EMO/ALT|BALLAD
+Good Riddance (Time of Your Life),Green Day,90,EMO/ALT|BALLAD
+Holiday,Green Day,89,EMO/ALT|PARTY
+When I Come Around,Green Day,91,EMO/ALT|GROUP SONG
+Tongue Tied,Grouplove,90,INDIE|GROUP SONG
+Paradise City,Guns N' Roses,92,ROCK|ANTHEM
+Sweet Child O' Mine,Guns N' Roses,94,ROCK|ANTHEM
+Welcome to the Jungle,Guns N' Roses,90,ROCK|CHAOS
+Hollaback Girl,Gwen Stefani,92,POP|PARTY|GROUP SONG
+The Sweet Escape,Gwen Stefani,90,POP|PARTY
+Stereo Hearts,Gym Class Heroes,89,POP|EASY WIN
+Adore You,Harry Styles,88,POP|EASY WIN
+As It Was,Harry Styles,91,POP|PARTY
+Sign of the Times,Harry Styles,87,BALLAD|SHOWSTOPPER
+Watermelon Sugar,Harry Styles,90,POP|PARTY
+Flagpole Sitta,Harvey Danger,88,ALT|FUN
+The Reason,Hoobastank,90,ROCK|BALLAD|GROUP SONG
+Cherry Wine,Hozier,86,BALLAD
+Take Me to Church,Hozier,90,BALLAD|ANTHEM
+Believer,Imagine Dragons,90,ALT|ANTHEM
+Demons,Imagine Dragons,88,ALT|BALLAD
+Radioactive,Imagine Dragons,90,ALT|ANTHEM
+Drive,Incubus,90,ALT|EASY WIN
+Pardon Me,Incubus,89,ALT
+Wish You Were Here,Incubus,88,ALT|VIBE
+Centerfold,J. Geils Band,91,ROCK|PARTY
+Big Green Tractor,Jason Aldean,89,COUNTRY
+Burnin' It Down,Jason Aldean,90,COUNTRY|PARTY
+Dirt Road Anthem,Jason Aldean,92,COUNTRY|PARTY
+She's Country,Jason Aldean,92,COUNTRY|PARTY|ANTHEM
+Take a Little Ride,Jason Aldean,91,COUNTRY|PARTY
+Are You Gonna Be My Girl,Jet,88,ROCK|PARTY
+The Middle,Jimmy Eat World,91,EMO/ALT|ANTHEM|GROUP SONG
+Tipsy,J-Kwon,92,HIP-HOP|PARTY|GROUP SONG
+Bye Bye,Jo Dee Messina,88,COUNTRY|FEMALE POWER
+Heads Carolina  Tails California,Jo Dee Messina,90,COUNTRY|FUN|GROUP SONG
+Brokenheartsville,Joe Nichols,89,COUNTRY
+Tequila Makes Her Clothes Fall Off,Joe Nichols,93,COUNTRY|FUNNY/NOVELTY|GROUP SONG
+Country Roads,John Denver,91,COUNTRY|ANTHEM|GROUP SONG
+All of Me,John Legend,90,BALLAD|GROUP SONG
+Ordinary People,John Legend,88,BALLAD
+Be My Baby Tonight,John Michael Montgomery,89,COUNTRY|EASY WIN
+Sold (The Grundy County Auction),John Michael Montgomery,93,COUNTRY|PARTY|CHAOS
+Buy Dirt,Jordan Davis,87,COUNTRY|BALLAD
+Next Thing You Know,Jordan Davis,88,COUNTRY|BALLAD
+Don't Stop Believin',Journey,100,ANTHEM|ROCK|GROUP SONG|LATE NIGHT CHAOS
+Livin’ After Midnight,Judas Priest,90,ROCK|PARTY
+Lucid Dreams,Juice WRLD,90,HIP-HOP|EMO
+Stronger,Kanye West,91,HIP-HOP|PARTY
+Gold Digger,Kanye West ft. Jamie Foxx,93,HIP-HOP|PARTY|GROUP SONG
+California Gurls,Katy Perry,91,POP|PARTY
+Dark Horse,Katy Perry,90,POP|PARTY
+Firework,Katy Perry,94,POP|ANTHEM|GROUP SONG
+Roar,Katy Perry,93,POP|ANTHEM
+Teenage Dream,Katy Perry,92,POP|PARTY
+Blue Ain't Your Color,Keith Urban,88,COUNTRY|BALLAD
+Somebody Like You,Keith Urban,91,COUNTRY|PARTY|GROUP SONG
+Who Wouldn't Wanna Be Me,Keith Urban,90,COUNTRY|FUN
+You'll Think of Me,Keith Urban,89,COUNTRY
+Since U Been Gone,Kelly Clarkson,94,POP|ANTHEM|GROUP SONG
+Stronger (What Doesn't Kill You),Kelly Clarkson,93,POP|ANTHEM
+Alright,Kendrick Lamar,90,HIP-HOP|ANTHEM
+Humble,Kendrick Lamar,91,HIP-HOP|ANTHEM
+Swimming Pools,Kendrick Lamar,89,HIP-HOP
+Footloose,Kenny Loggins,94,PARTY|GROUP SONG|ANTHEM
+Die Young,Kesha,92,POP|PARTY
+Tik Tok,Kesha,94,POP|PARTY|GROUP SONG
+Sex on Fire,Kings of Leon,89,ROCK|PARTY
+Use Somebody,Kings of Leon,90,ROCK
+Celebration,Kool & The Gang,93,PARTY|GROUP SONG
+Need You Now,Lady A,92,COUNTRY|DUET|BALLAD
+Bad Romance,Lady Gaga,95,POP|ANTHEM|GROUP SONG
+Born This Way,Lady Gaga,94,POP|ANTHEM|FEMALE POWER
+Just Dance,Lady Gaga,94,POP|PARTY|GROUP SONG
+Poker Face,Lady Gaga,94,POP|PARTY|GROUP SONG
+Shallow,Lady Gaga & Bradley Cooper,95,DUET|BALLAD|SHOWSTOPPER
+Telephone,Lady Gaga ft. Beyonce,92,POP|PARTY
+Heart Like a Truck,Lainey Wilson,91,COUNTRY|FEMALE POWER|ANTHEM
+Things a Man Oughta Know,Lainey Wilson,89,COUNTRY|FEMALE POWER
+I Hope You Dance,Lee Ann Womack,90,COUNTRY|BALLAD
+Get Low,Lil Jon & The East Side Boyz,94,HIP-HOP|PARTY|CHAOS
+Industry Baby,Lil Nas X,91,HIP-HOP|PARTY
+Montero (Call Me By Your Name),Lil Nas X,90,HIP-HOP|PARTY
+Old Town Road,Lil Nas X,94,COUNTRY|HIP-HOP|PARTY|GROUP SONG
+XO Tour Llif3,Lil Uzi Vert,89,HIP-HOP
+My Own Worst Enemy,Lit,92,ROCK|GROUP SONG|ANTHEM
+Boondocks,Little Big Town,90,COUNTRY|ANTHEM|GROUP SONG
+Girl Crush,Little Big Town,89,COUNTRY|BALLAD
+Pontoon,Little Big Town,90,COUNTRY|PARTY|GROUP SONG
+Good as Hell,Lizzo,91,POP|ANTHEM|FEMALE POWER
+Juice,Lizzo,90,POP|PARTY|FEMALE POWER
+Truth Hurts,Lizzo,91,POP|FEMALE POWER|PARTY
+Party Rock Anthem,LMFAO,96,POP|PARTY|GROUP SONG|CHAOS
+Sexy and I Know It,LMFAO,93,POP|PARTY|FUNNY/NOVELTY
+Shots,LMFAO ft. Lil Jon,94,PARTY|CHAOS|GROUP SONG
+Amazed,Lonestar,90,COUNTRY|BALLAD|GROUP SONG
+My Front Porch Looking In,Lonestar,88,COUNTRY|BALLAD
+Macarena,Los Del Rio,92,PARTY|GROUP SONG
+Country Girl (Shake It for Me),Luke Bryan,92,COUNTRY|PARTY|GROUP SONG
+Drunk on You,Luke Bryan,91,COUNTRY|PARTY
+Play It Again,Luke Bryan,90,COUNTRY|FUN
+That's My Kind of Night,Luke Bryan,90,COUNTRY|PARTY
+Beautiful Crazy,Luke Combs,91,COUNTRY|BALLAD
+Beer Never Broke My Heart,Luke Combs,94,COUNTRY|PARTY|ANTHEM
+Forever After All,Luke Combs,90,COUNTRY|BALLAD
+Hurricane,Luke Combs,92,COUNTRY|BALLAD|ANTHEM
+When It Rains It Pours,Luke Combs,92,COUNTRY|FUN
+Free Bird,Lynyrd Skynyrd,90,ROCK|SHOWSTOPPER
+Simple Man,Lynyrd Skynyrd,90,ROCK|BALLAD
+Sweet Home Alabama,Lynyrd Skynyrd,95,ANTHEM|GROUP SONG
+Die From a Broken Heart,Maddie & Tae,88,COUNTRY|BALLAD
+Girl in a Country Song,Maddie & Tae,90,COUNTRY|FEMALE POWER|FUN
+Like a Prayer,Madonna,93,POP|ANTHEM|GROUP SONG
+Material Girl,Madonna,91,POP|PARTY|FEMALE POWER
+Vogue,Madonna,90,POP|PARTY
+Sex & Candy,Marcy Playground,85,ALT
+Return of the Mack,Mark Morrison,90,POP|PARTY
+Uptown Funk,Mark Ronson ft. Bruno Mars,95,POP|PARTY|GROUP SONG
+Maps,Maroon 5,88,POP|PARTY
+She Will Be Loved,Maroon 5,89,POP|BALLAD
+Sugar,Maroon 5,89,POP|PARTY
+Sunday Morning,Maroon 5,88,POP|EASY WIN
+This Love,Maroon 5,90,POP|EASY WIN
+Independence Day,Martina McBride,89,COUNTRY|FEMALE POWER|SHOWSTOPPER
+This One's for the Girls,Martina McBride,88,COUNTRY|FEMALE POWER
+3AM,Matchbox Twenty,90,POP|GROUP SONG
+Bent,Matchbox Twenty,88,POP|BALLAD
+If You're Gone,Matchbox Twenty,88,POP|BALLAD
+Push,Matchbox Twenty,89,POP
+Unwell,Matchbox Twenty,91,POP|ANTHEM
+Electric Feel,MGMT,90,ALT|PARTY
+Kids,MGMT,90,ALT|GROUP SONG
+Time to Pretend,MGMT,88,ALT
+Beat It,Michael Jackson,94,POP|ROCK|ANTHEM
+Billie Jean,Michael Jackson,95,POP|ANTHEM|GROUP SONG
+Man in the Mirror,Michael Jackson,91,ANTHEM|BALLAD
+Smooth Criminal,Michael Jackson,92,POP|PARTY
+The Way You Make Me Feel,Michael Jackson,93,POP|ANTHEM|GROUP SONG
+Bad and Boujee,Migos,90,HIP-HOP|PARTY
+Walk It Talk It,Migos,89,HIP-HOP
+Flowers,Miley Cyrus,93,POP|ANTHEM
+Party in the U.S.A.,Miley Cyrus,95,POP|ANTHEM|GROUP SONG
+The Climb,Miley Cyrus,89,POP|BALLAD
+Wrecking Ball,Miley Cyrus,90,POP|BALLAD
+Gunpowder & Lead,Miranda Lambert,92,COUNTRY|FEMALE POWER|ANTHEM
+Kerosene,Miranda Lambert,89,COUNTRY|FEMALE POWER
+Mama's Broken Heart,Miranda Lambert,91,COUNTRY|FEMALE POWER|FUN
+The House That Built Me,Miranda Lambert,90,COUNTRY|BALLAD
+Get Ur Freak On,Missy Elliott,91,HIP-HOP|PARTY
+Lose Control,Missy Elliott,92,HIP-HOP|PARTY
+Work It,Missy Elliott,92,HIP-HOP|PARTY
+Float On,Modest Mouse,87,ALT|GROUP SONG
+This Is How We Do It,Montell Jordan,92,HIP-HOP|PARTY|GROUP SONG
+Helena,My Chemical Romance,89,EMO/ALT
+I'm Not Okay (I Promise),My Chemical Romance,91,EMO/ALT|ANTHEM
+Teenagers,My Chemical Romance,90,EMO/ALT|FUN
+Welcome to the Black Parade,My Chemical Romance,95,EMO/ALT|ANTHEM|GROUP SONG|LATE NIGHT CHAOS
+Torn,Natalie Imbruglia,84,POP|EMO/ALT
+Unwritten,Natasha Bedingfield,84,POP|ANTHEM
+Sweet Caroline,Neil Diamond,98,ANTHEM|GROUP SONG|EASY WIN
+Hot in Herre,Nelly,93,HIP-HOP|PARTY
+Far Away,Nickelback,86,ROCK|BALLAD
+How You Remind Me,Nickelback,91,ROCK|ANTHEM
+Photograph,Nickelback,89,ROCK|GROUP SONG
+Someday,Nickelback,87,ROCK
+Anaconda,Nicki Minaj,90,HIP-HOP|PARTY|FUNNY/NOVELTY
+Super Bass,Nicki Minaj,92,HIP-HOP|PARTY|FEMALE POWER
+Absolutely (Story of a Girl),Nine Days,88,ROCK|GROUP SONG
+Come As You Are,Nirvana,88,ROCK
+Lithium,Nirvana,87,ROCK
+Smells Like Teen Spirit,Nirvana,93,ROCK|ANTHEM|CHAOS
+Spirit in the Sky,Norman Greenbaum,91,CLASSIC|GROUP SONG
+Bye Bye Bye,NSYNC,94,POP|PARTY|GROUP SONG
+Tearin' Up My Heart,NSYNC,90,POP|PARTY
+Wonderwall,Oasis,93,EMO/ALT|EASY WIN|GROUP SONG
+Dirty Paws,Of Monsters and Men,86,INDIE
+Little Talks,Of Monsters and Men,90,INDIE|GROUP SONG
+Apologize,OneRepublic,88,POP|BALLAD
+Counting Stars,OneRepublic,90,POP|GROUP SONG
+Get the Party Started,P!nk,94,POP|PARTY|ANTHEM
+Just Like a Pill,P!nk,90,POP|EMO/ALT
+Raise Your Glass,P!nk,93,POP|PARTY|ANTHEM
+So What,P!nk,92,POP|PARTY
+I Write Sins Not Tragedies,Panic! At The Disco,92,EMO/ALT|ANTHEM|GROUP SONG
+Misery Business,Paramore,84,EMO/ALT|FEMALE POWER
+Sleepyhead,Passion Pit,87,INDIE
+Take a Walk,Passion Pit,89,INDIE
+Fireball,Pitbull,91,POP|PARTY
+Timber,Pitbull ft. Kesha,94,POP|PARTY|GROUP SONG
+Give Me Everything,Pitbull ft. Ne-Yo,92,POP|PARTY
+Hey There Delilah,Plain White T's,90,BALLAD|EASY WIN
+Every Rose Has Its Thorn,Poison,89,ROCK|BALLAD
+Nothin' But a Good Time,Poison,91,ROCK|PARTY
+Talk Dirty to Me,Poison,90,ROCK|PARTY
+Feel It Still,Portugal. The Man,92,POP|PARTY
+Live in the Moment,Portugal. The Man,88,POP
+Another One Bites the Dust,Queen,93,ROCK|PARTY
+Bohemian Rhapsody,Queen,97,ANTHEM|ROCK|GROUP SONG|SHOWSTOPPER
+Crazy Little Thing Called Love,Queen,91,ROCK|EASY WIN
+Don’t Stop Me Now,Queen,96,ANTHEM|ROCK|GROUP SONG
+We Are the Champions,Queen,95,ANTHEM|GROUP SONG
+We Will Rock You,Queen,92,ANTHEM|GROUP SONG|EASY WIN
+Under Pressure,Queen & David Bowie,92,DUET|ANTHEM
+Creep,Radiohead,92,EMO/ALT|ANTHEM
+Bless the Broken Road,Rascal Flatts,89,COUNTRY|BALLAD
+God Bless the Broken Road,Rascal Flatts,89,COUNTRY|BALLAD
+Here Comes Goodbye,Rascal Flatts,87,COUNTRY
+I Melt,Rascal Flatts,86,COUNTRY
+Life Is a Highway,Rascal Flatts,91,COUNTRY|PARTY|GROUP SONG
+Mayberry,Rascal Flatts,88,COUNTRY
+My Wish,Rascal Flatts,88,COUNTRY|BALLAD
+What Hurts the Most,Rascal Flatts,91,COUNTRY|BALLAD|SHOWSTOPPER
+Consider Me Gone,Reba McEntire,88,COUNTRY|FEMALE POWER
+Fancy,Reba McEntire,93,COUNTRY|FEMALE POWER|SHOWSTOPPER
+Take It Back,Reba McEntire,87,COUNTRY|FEMALE POWER
+Come and Get Your Love,Redbone,91,CLASSIC|VIBE
+Jessie's Girl,Rick Springfield,92,ROCK|PARTY|GROUP SONG
+Disturbia,Rihanna,89,POP|PARTY
+Only Girl (In the World),Rihanna,90,POP|PARTY
+Pon de Replay,Rihanna,90,PARTY|POP
+We Found Love,Rihanna,90,POP|PARTY
+Umbrella,Rihanna ft. Jay-Z,91,POP|FEMALE POWER|GROUP SONG
+Body Like a Back Road,Sam Hunt,90,COUNTRY|EASY WIN
+I'm Not the Only One,Sam Smith,88,BALLAD
+Stay With Me,Sam Smith,89,BALLAD
+Too Good at Goodbyes,Sam Smith,88,BALLAD
+Maria Maria,Santana,90,POP|VIBE
+Smooth,Santana ft. Rob Thomas,93,POP|PARTY|GROUP SONG
+Rock You Like a Hurricane,Scorpions,91,ROCK|PARTY
+Temperature,Sean Paul,92,PARTY|HIP-HOP
+Closing Time,Semisonic,86,ANTHEM|GROUP SONG|LATE NIGHT CHAOS
+Man! I Feel Like a Woman!,Shania Twain,95,COUNTRY|FEMALE POWER|PARTY
+Mo Bamba,Sheck Wes,92,HIP-HOP|CHAOS
+Don't You (Forget About Me),Simple Minds,93,ANTHEM|GROUP SONG
+Baby Got Back,Sir Mix-a-Lot,93,HIP-HOP|PARTY|FUNNY/NOVELTY
+We Are Family,Sister Sledge,92,ANTHEM|GROUP SONG
+All Star,Smash Mouth,92,FUNNY/NOVELTY|GROUP SONG|ANTHEM
+I'm a Believer,Smash Mouth,90,POP|GROUP SONG
+Chasing Cars,Snow Patrol,90,BALLAD|GROUP SONG
+Edge of Seventeen,Stevie Nicks,91,FEMALE POWER|ROCK
+Badfish,Sublime,88,ALT
+Santeria,Sublime,93,ALT|EASY WIN|GROUP SONG
+What I Got,Sublime,92,ALT|EASY WIN
+Wrong Way,Sublime,90,ALT|PARTY
+22,Taylor Swift,93,POP|PARTY|GROUP SONG
+Blank Space,Taylor Swift,92,POP|PARTY
+Cruel Summer,Taylor Swift,93,POP|ANTHEM
+Love Story,Taylor Swift,94,POP|COUNTRY|GROUP SONG
+Shake It Off,Taylor Swift,96,POP|PARTY|GROUP SONG|ANTHEM
+We Are Never Ever Getting Back Together,Taylor Swift,94,POP|FUN|GROUP SONG
+You Belong With Me,Taylor Swift,94,POP|ANTHEM|GROUP SONG
+Dirty Little Secret,The All-American Rejects,90,EMO/ALT|GROUP SONG
+Gives You Hell,The All-American Rejects,89,EMO/ALT|FUN
+Move Along,The All-American Rejects,88,EMO/ALT|ANTHEM
+Swing Swing,The All-American Rejects,87,EMO/ALT
+Love Shack,The B-52's,95,PARTY|GROUP SONG|EASY WIN
+Better Dig Two,The Band Perry,88,COUNTRY|PARTY
+If I Die Young,The Band Perry,90,COUNTRY|BALLAD
+Come Together,The Beatles,91,CLASSIC
+Hey Jude,The Beatles,95,ANTHEM|GROUP SONG
+I Saw Her Standing There,The Beatles,90,CLASSIC|PARTY
+Let It Be,The Beatles,94,ANTHEM|GROUP SONG
+Twist and Shout,The Beatles,93,CLASSIC|GROUP SONG
+Linger,The Cranberries,89,ALT|BALLAD
+Zombie,The Cranberries,93,ANTHEM|EMO/ALT|GROUP SONG
+Build Me Up Buttercup,The Foundations,92,CLASSIC|GROUP SONG
+Chelsea Dagger,The Fratellis,92,ALT|ANTHEM|GROUP SONG
+How to Save a Life,The Fray,92,POP|BALLAD|GROUP SONG
+Over My Head (Cable Car),The Fray,90,POP|GROUP SONG
+You Found Me,The Fray,89,POP
+Human,The Killers,88,ALT|GROUP SONG
+Mr. Brightside,The Killers,99,ANTHEM|EMO/ALT|GROUP SONG|LATE NIGHT CHAOS
+Somebody Told Me,The Killers,91,ALT|ANTHEM
+When You Were Young,The Killers,90,ALT|ANTHEM
+Ho Hey,The Lumineers,90,INDIE|GROUP SONG
+Ophelia,The Lumineers,89,INDIE|GROUP SONG
+Stubborn Love,The Lumineers,87,INDIE
+Daddy Issues,The Neighbourhood,87,ALT
+Sweater Weather,The Neighbourhood,90,ALT
+Face Down,The Red Jumpsuit Apparatus,90,EMO/ALT|ANTHEM
+Blinding Lights,The Weeknd,92,POP|PARTY
+Can't Feel My Face,The Weeknd,91,POP|PARTY
+Starboy,The Weeknd,90,POP|PARTY
+Seven Nation Army,The White Stripes,94,ROCK|ANTHEM|GROUP SONG
+Semi-Charmed Life,Third Eye Blind,87,EMO/ALT|GROUP SONG
+Closer to the Edge,Thirty Seconds to Mars,88,EMO/ALT
+The Kill,Thirty Seconds to Mars,90,EMO/ALT|ANTHEM
+Die a Happy Man,Thomas Rhett,87,COUNTRY|BALLAD
+Get Me Some of That,Thomas Rhett,89,COUNTRY|PARTY
+Make Me Wanna,Thomas Rhett,88,COUNTRY|FUN
+T-Shirt,Thomas Rhett,88,COUNTRY|FUN
+Humble and Kind,Tim McGraw,85,COUNTRY|BALLAD
+I Like It I Love It,Tim McGraw,91,COUNTRY|PARTY|GROUP SONG
+Live Like You Were Dying,Tim McGraw,87,COUNTRY|BALLAD
+Something Like That,Tim McGraw,89,COUNTRY|EASY WIN
+Proud Mary,Tina Turner,85,FEMALE POWER|SHOWSTOPPER
+No Scrubs,TLC,92,POP|FEMALE POWER|GROUP SONG
+As Good As I Once Was,Toby Keith,92,COUNTRY|FUN
+Courtesy of the Red White and Blue,Toby Keith,90,COUNTRY|ANTHEM
+Red Solo Cup,Toby Keith,93,COUNTRY|FUNNY/NOVELTY|GROUP SONG
+Should’ve Been a Cowboy,Toby Keith,93,COUNTRY|ANTHEM|GROUP SONG
+Beer for My Horses,Toby Keith ft. Willie Nelson,91,COUNTRY|DUET|GROUP SONG
+867-5309/Jenny,Tommy Tutone,92,CLASSIC|GROUP SONG
+Africa,Toto,82,CLASSIC|GROUP SONG
+Bartender,T-Pain,90,HIP-HOP|PARTY
+Buy U a Drank,T-Pain,91,HIP-HOP|PARTY
+Keeper of the Stars,Tracy Byrd,88,COUNTRY|BALLAD
+Watermelon Crawl,Tracy Byrd,92,COUNTRY|PARTY|GROUP SONG
+Fast Car,Tracy Chapman,92,CLASSIC|BALLAD|GROUP SONG
+Drive By,Train,85,POP|EASY WIN
+Drops of Jupiter,Train,83,POP|BALLAD
+Hey  Soul Sister,Train,89,POP|EASY WIN
+Goosebumps,Travis Scott,89,HIP-HOP
+Sicko Mode,Travis Scott,90,HIP-HOP|CHAOS
+Drift Away,Uncle Kracker,88,POP|EASY WIN
+Follow Me,Uncle Kracker,87,POP|EASY WIN
+DJ Got Us Fallin' in Love,Usher,92,POP|PARTY
+Yeah!,Usher ft. Lil Jon & Ludacris,95,HIP-HOP|PARTY|GROUP SONG|ANTHEM
+Brown Eyed Girl,Van Morrison,86,CLASSIC|EASY WIN
+Georgia,Vance Joy,86,INDIE
+Riptide,Vance Joy,90,EASY WIN|INDIE
+YMCA,Village People,94,ANTHEM|GROUP SONG
+Shut Up and Dance,WALK THE MOON,94,POP|PARTY|GROUP SONG
+Check Yes Juliet,We The Kings,87,EMO/ALT|FUN
+Teenage Dirtbag,Wheatus,84,EMO/ALT|FUNNY/NOVELTY
+Here I Go Again,Whitesnake,90,ROCK|ANTHEM
+I Wanna Dance with Somebody,Whitney Houston,97,POP|FEMALE POWER|ANTHEM
+Ocean Avenue,Yellowcard,89,EMO/ALT|GROUP SONG
+We No Speak Americano,Yolanda Be Cool,88,PARTY|NOVELTY
+Chicken Fried,Zac Brown Band,95,COUNTRY|ANTHEM|GROUP SONG

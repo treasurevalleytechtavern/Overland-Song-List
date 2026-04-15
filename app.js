@@ -6,8 +6,11 @@ const clearButton = document.querySelector("#clear-search");
 const resultsBody = document.querySelector("#song-results");
 const resultCount = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
+const popularBody = document.querySelector("#popular-results");
+const popularEmptyState = document.querySelector("#popular-empty-state");
 
 let songs = [];
+let popularSongs = [];
 let searchTimer = 0;
 
 function normalize(value) {
@@ -18,13 +21,27 @@ function normalize(value) {
     .trim();
 }
 
+function parsePopularity(value) {
+  const score = Number.parseFloat(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(score) ? score : 0;
+}
+
+function findHeader(headers, candidates) {
+  return candidates
+    .map((candidate) => headers.indexOf(candidate))
+    .find((index) => index !== -1) ?? -1;
+}
+
 function indexSongs(nextSongs) {
   return nextSongs
     .filter((song) => song.title || song.artist)
     .map((song) => ({
       title: String(song.title || "").trim(),
       artist: String(song.artist || "").trim(),
-      searchText: normalize(`${song.title} ${song.artist}`)
+      popularity: String(song.popularity || "").trim(),
+      popularityScore: parsePopularity(song.popularity),
+      categories: String(song.categories || "").trim(),
+      searchText: normalize(`${song.title} ${song.artist} ${song.categories}`)
     }))
     .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
 }
@@ -60,6 +77,23 @@ function highlight(value, query) {
   return `${before}<mark>${match}</mark>${after}`;
 }
 
+function renderPopularSongs() {
+  if (!popularBody || !popularEmptyState) {
+    return;
+  }
+
+  popularBody.innerHTML = popularSongs.map((song) => `
+    <tr>
+      <td data-label="Title">${escapeHtml(song.title)}</td>
+      <td data-label="Artist">${escapeHtml(song.artist)}</td>
+      <td class="score-cell" data-label="Score">${escapeHtml(song.popularity || "-")}</td>
+      <td data-label="Categories">${escapeHtml(song.categories || "-")}</td>
+    </tr>
+  `).join("");
+
+  popularEmptyState.hidden = popularSongs.length !== 0;
+}
+
 function render() {
   const query = searchInput.value.trim();
   const normalizedQuery = normalize(query);
@@ -77,8 +111,10 @@ function render() {
 
   resultsBody.innerHTML = visibleMatches.map((song) => `
     <tr>
-      <td>${highlight(song.title, query)}</td>
-      <td>${highlight(song.artist, query)}</td>
+      <td data-label="Title">${highlight(song.title, query)}</td>
+      <td data-label="Artist">${highlight(song.artist, query)}</td>
+      <td class="score-cell" data-label="Score">${escapeHtml(song.popularity || "-")}</td>
+      <td data-label="Categories">${highlight(song.categories || "-", query)}</td>
     </tr>
   `).join("");
 
@@ -127,6 +163,8 @@ function parseCsv(csvText) {
   const headers = nonEmptyRows.shift()?.map((item) => normalize(item)) || [];
   const titleIndex = headers.indexOf("title");
   const artistIndex = headers.indexOf("artist");
+  const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
+  const categoriesIndex = findHeader(headers, ["categories", "category"]);
 
   if (titleIndex === -1 || artistIndex === -1) {
     throw new Error("CSV must include title and artist columns.");
@@ -134,12 +172,18 @@ function parseCsv(csvText) {
 
   return nonEmptyRows.map((items) => ({
     title: items[titleIndex] || "",
-    artist: items[artistIndex] || ""
+    artist: items[artistIndex] || "",
+    popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
+    categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || ""
   }));
 }
 
 function setSongs(nextSongs) {
   songs = indexSongs(nextSongs);
+  popularSongs = [...songs]
+    .sort((a, b) => b.popularityScore - a.popularityScore || a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist))
+    .slice(0, 20);
+  renderPopularSongs();
   render();
 }
 

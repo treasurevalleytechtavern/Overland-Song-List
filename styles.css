@@ -162,6 +162,16 @@ button:hover {
   min-width: 96px;
 }
 
+.popular-panel {
+  display: grid;
+  gap: 12px;
+  max-width: 1040px;
+}
+
+.popular-heading h2 {
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
+}
+
 .helper-copy {
   max-width: 760px;
   margin: 0;
@@ -199,7 +209,8 @@ button:hover {
 
 table {
   width: 100%;
-  min-width: 480px;
+  min-width: 760px;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
@@ -208,6 +219,9 @@ td {
   padding: 15px 18px;
   border-bottom: 1px solid var(--line);
   text-align: left;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  word-break: normal;
 }
 
 th {
@@ -232,6 +246,36 @@ tbody tr:hover {
 td:first-child {
   color: #ffffff;
   font-weight: 700;
+}
+
+.title-column {
+  width: 32%;
+}
+
+.artist-column {
+  width: 28%;
+}
+
+.compact-table th,
+.compact-table td {
+  padding: 12px 14px;
+}
+
+.score-cell {
+  width: 90px;
+  color: var(--gold);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 90px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 240px;
 }
 
 .empty-state {
@@ -276,5 +320,60 @@ mark {
   .result-count {
     width: 100%;
     text-align: left;
+  }
+
+  table {
+    min-width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+  }
+
+  tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  td {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(48, 48, 48, 0.72);
+  }
+
+  td:nth-child(1),
+  td:nth-child(2) {
+    min-width: 0;
+  }
+
+  td:nth-child(3),
+  td:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
+  td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--cyan);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .score-cell {
+    width: auto;
   }
 }
