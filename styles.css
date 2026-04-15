@@ -286,6 +286,26 @@ td:nth-child(3) {
   font-weight: 700;
 }
 
+.request-song-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 14px;
+  border: 1px solid rgba(255, 70, 98, 0.82);
+  border-radius: 8px;
+  padding: 0 16px;
+  background: rgba(255, 70, 98, 0.16);
+  color: var(--white);
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(255, 70, 98, 0.2);
+}
+
+.request-song-button:hover {
+  background: rgba(255, 70, 98, 0.3);
+}
+
 mark {
   border-radius: 4px;
   padding: 0 2px;

@@ -1,6 +1,7 @@
 const maxRenderedRows = 300;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
+const requestSongUrl = "https://overlandbar.com/request-a-song";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -55,6 +56,11 @@ function indexSongs(nextSongs) {
       const popularity = String(song.popularity || "").trim();
       const categories = String(song.categories || "").trim();
       const searchText = normalize(`${title} ${artist} ${categories}`);
+      const compactFields = [
+        normalize(title).replace(/\s/g, ""),
+        normalize(artist).replace(/\s/g, ""),
+        normalize(categories).replace(/\s/g, "")
+      ].filter(Boolean);
 
       return {
         title,
@@ -63,6 +69,7 @@ function indexSongs(nextSongs) {
         popularityScore: parsePopularity(popularity),
         categories,
         searchText,
+        compactFields,
         titleStarts: normalize(title),
         artistStarts: normalize(artist),
         fuzzyTerms: Array.from(new Set(tokenize(`${title} ${artist} ${categories}`)))
@@ -118,6 +125,24 @@ function allowedTypoDistance(term) {
 
 function fuzzyRank(song, queryTerms) {
   let totalDistance = 0;
+  const meaningfulTerms = queryTerms.filter((term) => term.length >= 3);
+
+  if (meaningfulTerms.length >= 2) {
+    const compactQuery = meaningfulTerms.join("");
+    const phraseDistance = allowedTypoDistance(compactQuery);
+
+    if (song.compactFields.some((field) => field.includes(compactQuery))) {
+      return 0;
+    }
+
+    if (!song.fuzzyTerms.some((term) => meaningfulTerms.includes(term))) {
+      return null;
+    }
+
+    if (compactQuery.length >= 7 && song.compactFields.some((field) => editDistanceWithin(compactQuery, field, phraseDistance) <= phraseDistance)) {
+      return phraseDistance;
+    }
+  }
 
   for (const queryTerm of queryTerms) {
     const maxDistance = allowedTypoDistance(queryTerm);
@@ -146,6 +171,17 @@ function fuzzyRank(song, queryTerms) {
   }
 
   return totalDistance;
+}
+
+function renderRequestSong(query) {
+  const requestUrl = `${requestSongUrl}?song=${encodeURIComponent(query)}`;
+  resultsBody.innerHTML = "";
+  emptyState.innerHTML = `
+    <span>No songs found for "${escapeHtml(query)}".</span>
+    <a class="request-song-button" href="${requestUrl}" target="_blank" rel="noopener">Request a song</a>
+  `;
+  emptyState.hidden = false;
+  resultCount.textContent = "0 songs";
 }
 
 function escapeHtml(value) {
@@ -236,6 +272,11 @@ function render() {
   }
 
   const visibleMatches = matches.slice(0, maxRenderedRows);
+
+  if (matches.length === 0) {
+    renderRequestSong(query);
+    return;
+  }
 
   resultsBody.innerHTML = visibleMatches.map((song) => `
     <tr>
