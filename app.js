@@ -14,13 +14,18 @@ const emptyState = document.querySelector("#empty-state");
 const similarPanel = document.querySelector("#similar-panel");
 const similarBody = document.querySelector("#similar-results");
 const similarTitle = document.querySelector("#similar-title");
-const popularBody = document.querySelector("#popular-results");
-const popularEmptyState = document.querySelector("#popular-empty-state");
+const diceButton = document.querySelector("#dice-button");
+const diceResults = document.querySelector("#dice-results");
+const diceFemaleResults = document.querySelector("#dice-female-results");
+const diceMaleResults = document.querySelector("#dice-male-results");
 
 let songs = [];
-let popularSongs = [];
 let searchTimer = 0;
 let requestNavigationStarted = false;
+
+if (diceButton) {
+  diceButton.disabled = true;
+}
 
 function normalize(value) {
   return String(value || "")
@@ -401,19 +406,31 @@ function highlight(value, query) {
   return `${before}<mark>${match}</mark>${after}`;
 }
 
-function renderPopularSongs() {
-  if (!popularBody || !popularEmptyState) {
+function getRandomSongsByVocal(vocal, limit) {
+  const vocalKey = normalize(vocal);
+  const candidates = songs.filter((song) => normalize(song.originalVocal) === vocalKey);
+
+  for (let index = candidates.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const current = candidates[index];
+    candidates[index] = candidates[swapIndex];
+    candidates[swapIndex] = current;
+  }
+
+  return candidates.slice(0, limit);
+}
+
+function renderDiceList(target, songList) {
+  if (!target) {
     return;
   }
 
-  popularBody.innerHTML = renderSongRows(popularSongs);
-
-  popularEmptyState.hidden = popularSongs.length !== 0;
-}
-
-function comparePopularSongs(a, b) {
-  return b.popularityScore - a.popularityScore
-    || b.popularityTieBreaker - a.popularityTieBreaker;
+  target.innerHTML = songList.map((song) => `
+    <li>
+      <span class="dice-song-title">${escapeHtml(song.title)}</span>
+      <span class="dice-song-artist">${escapeHtml(song.artist)}</span>
+    </li>
+  `).join("");
 }
 
 function getCategoryTerms(song) {
@@ -641,22 +658,20 @@ function setSongs(nextSongs) {
 
 function setPreparedSongs(nextSongs) {
   songs = nextSongs;
-  popularSongs = [];
+  if (diceButton) {
+    diceButton.disabled = songs.length === 0;
+  }
+  hideSearchResults();
+}
 
-  for (const song of songs) {
-    popularSongs.push({
-      ...song,
-      popularityTieBreaker: Math.random()
-    });
-    popularSongs.sort(comparePopularSongs);
-
-    if (popularSongs.length > 20) {
-      popularSongs.pop();
-    }
+function renderDiceSuggestions() {
+  if (!diceResults) {
+    return;
   }
 
-  renderPopularSongs();
-  hideSearchResults();
+  renderDiceList(diceFemaleResults, getRandomSongsByVocal("female", 5));
+  renderDiceList(diceMaleResults, getRandomSongsByVocal("male", 5));
+  diceResults.hidden = false;
 }
 
 async function loadInitialSongs() {
@@ -681,6 +696,9 @@ async function loadInitialSongs() {
     setSongs(parseCsv(await response.text()));
   } catch {
     songs = [];
+    if (diceButton) {
+      diceButton.disabled = true;
+    }
     if (resultsSection) {
       resultsSection.hidden = false;
     }
@@ -728,5 +746,9 @@ clearButton.addEventListener("click", () => {
   searchInput.focus();
   render();
 });
+
+if (diceButton) {
+  diceButton.addEventListener("click", renderDiceSuggestions);
+}
 
 loadInitialSongs();

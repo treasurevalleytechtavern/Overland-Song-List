@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Good Times Karaoke Song Search</title>
-    <link rel="stylesheet" href="styles.css?v=20260416-no-length">
+    <link rel="stylesheet" href="styles.css?v=20260416-dice-suggestions">
   </head>
   <body>
     <main class="app-shell">
@@ -59,7 +59,7 @@
         </div>
       </section>
 
-      <section class="popular-band" aria-labelledby="popular-title">
+      <section class="popular-band" aria-label="Browse and song suggestions">
         <div class="popular-panel" id="similar-panel" hidden>
           <div class="popular-heading">
             <p class="eyebrow">Similar picks</p>
@@ -139,27 +139,28 @@
           </div>
         </section>
 
-        <div class="popular-panel">
+        <div class="dice-panel">
           <div class="popular-heading">
-            <p class="eyebrow">Top picks</p>
-            <h2 id="popular-title">20 most popular songs</h2>
+            <p class="eyebrow">Feeling lucky?</p>
+            <h2 id="dice-title">Roll for a song</h2>
           </div>
-          <div class="table-wrap compact-table">
-            <table>
-              <thead>
-                <tr>
-                  <th class="title-column" scope="col">Title</th>
-                  <th class="artist-column" scope="col">Artist</th>
-                </tr>
-              </thead>
-              <tbody id="popular-results"></tbody>
-            </table>
-            <p id="popular-empty-state" class="empty-state" hidden>Popular songs will appear after the song list loads.</p>
+          <p class="dice-copy">Tap for a fresh handful of karaoke ideas.</p>
+          <button class="dice-button" id="dice-button" type="button">Roll the Dice</button>
+
+          <div class="dice-results" id="dice-results" hidden>
+            <div class="dice-column dice-ladies">
+              <h3>Ladies</h3>
+              <ul id="dice-female-results" class="dice-list"></ul>
+            </div>
+            <div class="dice-column dice-men">
+              <h3>Men</h3>
+              <ul id="dice-male-results" class="dice-list"></ul>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <script src="app.js?v=20260416-social-singing-index"></script>
+    <script src="app.js?v=20260416-dice-suggestions"></script>
   </body>
 </html>

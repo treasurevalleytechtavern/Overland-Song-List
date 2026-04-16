@@ -262,6 +262,98 @@ button:hover {
   max-width: 1040px;
 }
 
+.dice-panel {
+  display: grid;
+  gap: 14px;
+  max-width: 1040px;
+}
+
+.dice-copy {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.dice-button {
+  width: fit-content;
+  min-height: 50px;
+  border-color: rgba(255, 209, 42, 0.72);
+  background: rgba(255, 209, 42, 0.12);
+  color: var(--white);
+  box-shadow: 0 0 20px rgba(255, 209, 42, 0.18);
+}
+
+.dice-button:hover {
+  background: rgba(255, 209, 42, 0.22);
+}
+
+.dice-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.dice-results {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.dice-column {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(18, 18, 18, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.dice-column h3 {
+  margin: 0;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--cyan);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dice-ladies h3 {
+  color: var(--red);
+}
+
+.dice-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dice-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 10px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dice-list li:last-child {
+  border-bottom: 0;
+}
+
+.dice-song-title,
+.dice-song-artist {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.dice-song-title {
+  color: var(--white);
+  font-weight: 700;
+}
+
+.dice-song-artist {
+  color: var(--muted);
+}
+
 .popular-band {
   display: grid;
   gap: 30px;
@@ -456,6 +548,19 @@ mark {
     min-width: 0;
     white-space: normal;
     overflow-wrap: anywhere;
+  }
+
+  .dice-results,
+  .dice-list li {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .dice-button {
+    width: 100%;
+  }
+
+  .dice-list li {
+    padding: 12px 10px;
   }
 
 }
