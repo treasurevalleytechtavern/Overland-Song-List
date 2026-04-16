@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Good Times Karaoke Song Search</title>
-    <link rel="stylesheet" href="styles.css?v=20260416-dice-suggestions">
+    <link rel="stylesheet" href="styles.css?v=20260416-dice-paging-field-priority">
   </head>
   <body>
     <main class="app-shell">
@@ -28,6 +28,10 @@
               aria-describedby="result-count"
             >
             <button id="clear-search" type="button">Clear</button>
+            <button class="dice-button dice-button-inline" id="top-dice-button" type="button">
+              <img class="dice-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='10' fill='%23ffd12a'/%3E%3Crect x='9' y='9' width='46' height='46' rx='8' fill='%23121212'/%3E%3Ccircle cx='22' cy='22' r='5' fill='%23ffd12a'/%3E%3Ccircle cx='42' cy='22' r='5' fill='%23ffd12a'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23ff4662'/%3E%3Ccircle cx='22' cy='42' r='5' fill='%2331e8ff'/%3E%3Ccircle cx='42' cy='42' r='5' fill='%2331e8ff'/%3E%3C/svg%3E" alt="">
+              <span>Let Chance Decide</span>
+            </button>
           </div>
         </form>
 
@@ -57,6 +61,7 @@
           </table>
           <p id="empty-state" class="empty-state" hidden>No songs match that search.</p>
         </div>
+        <button class="load-more-button" id="load-more-results" type="button" hidden>Show next 100</button>
       </section>
 
       <section class="popular-band" aria-label="Browse and song suggestions">
@@ -87,65 +92,68 @@
           <div class="browse-group browse-decade">
             <p class="browse-label">Decade</p>
             <div class="browse-buttons">
-              <button class="browse-button" type="button" data-search="70s">70s</button>
-              <button class="browse-button" type="button" data-search="80s">80s</button>
-              <button class="browse-button" type="button" data-search="90s">90s</button>
-              <button class="browse-button" type="button" data-search="2000s">2000s</button>
-              <button class="browse-button" type="button" data-search="2010s">2010s</button>
+              <button class="browse-button" type="button" data-search="70s" data-field="decade">70s</button>
+              <button class="browse-button" type="button" data-search="80s" data-field="decade">80s</button>
+              <button class="browse-button" type="button" data-search="90s" data-field="decade">90s</button>
+              <button class="browse-button" type="button" data-search="2000s" data-field="decade">2000s</button>
+              <button class="browse-button" type="button" data-search="2010s" data-field="decade">2010s</button>
             </div>
           </div>
 
           <div class="browse-group browse-vocal">
             <p class="browse-label">Original vocal</p>
             <div class="browse-buttons">
-              <button class="browse-button" type="button" data-search="male">Male</button>
-              <button class="browse-button" type="button" data-search="female">Female</button>
-              <button class="browse-button" type="button" data-search="mixed">Mixed</button>
+              <button class="browse-button" type="button" data-search="male" data-field="originalVocal">Male</button>
+              <button class="browse-button" type="button" data-search="female" data-field="originalVocal">Female</button>
+              <button class="browse-button" type="button" data-search="mixed" data-field="originalVocal">Mixed</button>
             </div>
           </div>
 
           <div class="browse-group browse-genre">
             <p class="browse-label">Genre</p>
             <div class="browse-buttons">
-              <button class="browse-button" type="button" data-search="pop">Pop</button>
-              <button class="browse-button" type="button" data-search="rock">Rock</button>
-              <button class="browse-button" type="button" data-search="country">Country</button>
-              <button class="browse-button" type="button" data-search="hip hop">Hip-Hop</button>
-              <button class="browse-button" type="button" data-search="rap">Rap</button>
-              <button class="browse-button" type="button" data-search="r b">R&amp;B</button>
-              <button class="browse-button" type="button" data-search="soul">Soul</button>
-              <button class="browse-button" type="button" data-search="alternative indie">Alternative / Indie</button>
-              <button class="browse-button" type="button" data-search="emo pop punk">Emo / Pop Punk</button>
-              <button class="browse-button" type="button" data-search="metal hard rock">Metal / Hard Rock</button>
+              <button class="browse-button" type="button" data-search="pop" data-field="categories">Pop</button>
+              <button class="browse-button" type="button" data-search="rock" data-field="categories">Rock</button>
+              <button class="browse-button" type="button" data-search="country" data-field="categories">Country</button>
+              <button class="browse-button" type="button" data-search="hip hop" data-field="categories">Hip-Hop</button>
+              <button class="browse-button" type="button" data-search="rap" data-field="categories">Rap</button>
+              <button class="browse-button" type="button" data-search="r b" data-field="categories">R&amp;B</button>
+              <button class="browse-button" type="button" data-search="soul" data-field="categories">Soul</button>
+              <button class="browse-button" type="button" data-search="alternative indie" data-field="categories">Alternative / Indie</button>
+              <button class="browse-button" type="button" data-search="emo pop punk" data-field="categories">Emo / Pop Punk</button>
+              <button class="browse-button" type="button" data-search="metal hard rock" data-field="categories">Metal / Hard Rock</button>
             </div>
           </div>
 
           <div class="browse-group browse-challenge">
             <p class="browse-label">Vocal challenge</p>
             <div class="browse-buttons">
-              <button class="browse-button" type="button" data-search="easy">Easy</button>
-              <button class="browse-button" type="button" data-search="medium">Medium</button>
-              <button class="browse-button" type="button" data-search="hard">Hard</button>
-              <button class="browse-button" type="button" data-search="vocal flex">Vocal Flex</button>
+              <button class="browse-button" type="button" data-search="easy" data-field="categories">Easy</button>
+              <button class="browse-button" type="button" data-search="medium" data-field="categories">Medium</button>
+              <button class="browse-button" type="button" data-search="hard" data-field="categories">Hard</button>
+              <button class="browse-button" type="button" data-search="vocal flex" data-field="categories">Vocal Flex</button>
             </div>
           </div>
 
           <div class="browse-group browse-social">
             <p class="browse-label">Social singing</p>
             <div class="browse-buttons">
-              <button class="browse-button" type="button" data-search="duets">Duet</button>
-              <button class="browse-button" type="button" data-search="group song">Group Songs</button>
+              <button class="browse-button" type="button" data-search="duets" data-field="socialSinging">Duet</button>
+              <button class="browse-button" type="button" data-search="group song" data-field="socialSinging">Group Songs</button>
             </div>
           </div>
         </section>
 
-        <div class="dice-panel">
+        <div class="dice-panel" id="dice-panel" hidden>
           <div class="popular-heading">
-            <p class="eyebrow">Feeling lucky?</p>
+            <p class="eyebrow">Let chance decide</p>
             <h2 id="dice-title">Roll for a song</h2>
           </div>
           <p class="dice-copy">Tap for a fresh handful of karaoke ideas.</p>
-          <button class="dice-button" id="dice-button" type="button">Roll the Dice</button>
+          <button class="dice-button" id="dice-button" type="button">
+            <img class="dice-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='10' fill='%23ffd12a'/%3E%3Crect x='9' y='9' width='46' height='46' rx='8' fill='%23121212'/%3E%3Ccircle cx='22' cy='22' r='5' fill='%23ffd12a'/%3E%3Ccircle cx='42' cy='22' r='5' fill='%23ffd12a'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23ff4662'/%3E%3Ccircle cx='22' cy='42' r='5' fill='%2331e8ff'/%3E%3Ccircle cx='42' cy='42' r='5' fill='%2331e8ff'/%3E%3C/svg%3E" alt="">
+            <span>Roll Again</span>
+          </button>
 
           <div class="dice-results" id="dice-results" hidden>
             <div class="dice-column dice-ladies">
@@ -161,6 +169,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260416-dice-suggestions"></script>
+    <script src="app.js?v=20260416-similar-artist-genre-year"></script>
   </body>
 </html>

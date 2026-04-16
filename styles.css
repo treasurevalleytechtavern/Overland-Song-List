@@ -280,7 +280,18 @@ button:hover {
   border-color: rgba(255, 209, 42, 0.72);
   background: rgba(255, 209, 42, 0.12);
   color: var(--white);
+  gap: 9px;
   box-shadow: 0 0 20px rgba(255, 209, 42, 0.18);
+}
+
+.dice-button-inline {
+  min-height: 60px;
+}
+
+.dice-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
 }
 
 .dice-button:hover {
@@ -485,6 +496,16 @@ td:first-child {
   background: rgba(255, 70, 98, 0.3);
 }
 
+.load-more-button {
+  margin-top: 18px;
+  border-color: rgba(49, 232, 255, 0.72);
+  background: rgba(49, 232, 255, 0.1);
+}
+
+.load-more-button:hover {
+  background: rgba(49, 232, 255, 0.2);
+}
+
 mark {
   border-radius: 4px;
   padding: 0 2px;
@@ -517,6 +538,7 @@ mark {
   }
 
   #clear-search,
+  .dice-button-inline,
   .result-count {
     width: 100%;
     text-align: left;
