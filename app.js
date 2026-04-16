@@ -402,6 +402,11 @@ function renderPopularSongs() {
   popularEmptyState.hidden = popularSongs.length !== 0;
 }
 
+function comparePopularSongs(a, b) {
+  return b.popularityScore - a.popularityScore
+    || b.popularityTieBreaker - a.popularityTieBreaker;
+}
+
 function getCategoryTerms(song) {
   return tokenize(song.categories).filter((term) => term.length >= 3);
 }
@@ -622,8 +627,11 @@ function setPreparedSongs(nextSongs) {
   popularSongs = [];
 
   for (const song of songs) {
-    popularSongs.push(song);
-    popularSongs.sort((a, b) => b.popularityScore - a.popularityScore || a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+    popularSongs.push({
+      ...song,
+      popularityTieBreaker: Math.random()
+    });
+    popularSongs.sort(comparePopularSongs);
 
     if (popularSongs.length > 20) {
       popularSongs.pop();
