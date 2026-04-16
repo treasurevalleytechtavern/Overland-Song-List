@@ -2,6 +2,8 @@ const maxRenderedRows = 100;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
+const songIndexUrl = "songs.index.json?v=20260416-2852";
+const songCsvUrl = "songs.csv?v=20260416-2852";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -47,6 +49,12 @@ function normalize(value) {
 
 function tokenize(value) {
   return normalize(value).split(" ").filter(Boolean);
+}
+
+function waitForPaint() {
+  return new Promise((resolve) => {
+    window.requestAnimationFrame(resolve);
+  });
 }
 
 function getDecadeAliases(value) {
@@ -754,17 +762,18 @@ function renderDiceSuggestions() {
 
 async function loadInitialSongs() {
   try {
-    let response = await fetch("songs.index.json", { cache: "no-store" });
+    let response = await fetch(songIndexUrl);
 
     if (response.ok) {
+      await waitForPaint();
       setPreparedSongs(hydrateIndexedSongs(await response.json()));
       return;
     }
 
-    response = await fetch("songs.csv", { cache: "no-store" });
+    response = await fetch(songCsvUrl);
 
     if (!response.ok) {
-      response = await fetch("data/songs.csv", { cache: "no-store" });
+      response = await fetch("data/songs.csv");
     }
 
     if (!response.ok) {

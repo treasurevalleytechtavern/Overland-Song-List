@@ -289,9 +289,12 @@ button:hover {
 }
 
 .dice-icon {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
+  filter:
+    drop-shadow(0 0 7px rgba(49, 232, 255, 0.58))
+    drop-shadow(0 0 10px rgba(255, 70, 98, 0.35));
 }
 
 .dice-button:hover {
