@@ -365,6 +365,7 @@ td:first-child {
 .length-cell {
   width: 100px;
   color: var(--muted);
+  font-size: 0.95rem;
   white-space: nowrap;
 }
 
@@ -458,6 +459,7 @@ mark {
   .length-cell {
     width: 15%;
     min-width: 58px;
+    font-size: 0.78rem;
     text-align: right;
   }
 
