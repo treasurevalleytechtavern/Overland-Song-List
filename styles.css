@@ -354,19 +354,11 @@ td:first-child {
 }
 
 .title-column {
-  width: 48%;
+  width: 56%;
 }
 
 .artist-column {
-  width: 38%;
-}
-
-.length-column,
-.length-cell {
-  width: 100px;
-  color: var(--muted);
-  font-size: 0.95rem;
-  white-space: nowrap;
+  width: 44%;
 }
 
 .compact-table th,
@@ -448,19 +440,11 @@ mark {
   }
 
   .title-column {
-    width: 45%;
+    width: 54%;
   }
 
   .artist-column {
-    width: 40%;
-  }
-
-  .length-column,
-  .length-cell {
-    width: 15%;
-    min-width: 58px;
-    font-size: 0.78rem;
-    text-align: right;
+    width: 46%;
   }
 
   th {
@@ -472,10 +456,6 @@ mark {
     min-width: 0;
     white-space: normal;
     overflow-wrap: anywhere;
-  }
-
-  td:nth-child(3) {
-    white-space: nowrap;
   }
 
 }

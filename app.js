@@ -58,26 +58,8 @@ function getDecadeAliases(value) {
   return Array.from(aliases);
 }
 
-function getYearAliases(term) {
-  const year = Number(term);
-
-  if (!/^\d{4}$/.test(term) || year < 1900 || year > 2099) {
-    return [];
-  }
-
-  const decadeStart = Math.floor(year / 10) * 10;
-  const shortDecade = `${String(decadeStart).slice(2)}s`;
-  const longDecade = `${decadeStart}s`;
-
-  return [shortDecade, longDecade];
-}
-
-function expandQueryTerms(queryTerms) {
-  return Array.from(new Set(queryTerms.flatMap((term) => [term, ...getYearAliases(term)])));
-}
-
 function getQueryTermGroups(queryTerms) {
-  return queryTerms.map((term) => Array.from(new Set([term, ...getYearAliases(term)])));
+  return queryTerms.map((term) => [term]);
 }
 
 function songMatchesQuery(song, queryTermGroups) {
@@ -94,8 +76,28 @@ function getSearchPieces(song) {
     song.categories,
     song.decade,
     ...decadeAliases,
+    song.year,
     song.originalVocal
   ].filter(Boolean);
+}
+
+function getMatchRank(song, normalizedQuery, queryTerms) {
+  const titleArtistText = normalize(`${song.title} ${song.artist}`);
+  const yearText = normalize(song.year);
+
+  if (normalizedQuery && titleArtistText.includes(normalizedQuery)) {
+    return 0;
+  }
+
+  if (queryTerms.length && queryTerms.every((term) => tokenize(titleArtistText).includes(term))) {
+    return 0;
+  }
+
+  if (yearText && queryTerms.includes(yearText)) {
+    return 2;
+  }
+
+  return 3;
 }
 
 function parsePopularity(value) {
@@ -125,25 +127,26 @@ function indexSongs(nextSongs) {
       const categories = String(song.categories || "").trim();
       const decade = String(song.decade || "").trim();
       const originalVocal = String(song.originalVocal || "").trim();
-      const length = String(song.length || "").trim();
-      const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
+      const year = String(song.year || "").trim();
+      const searchPieces = getSearchPieces({ title, artist, categories, decade, year, originalVocal });
       const searchText = normalize(searchPieces.join(" "));
       const compactFields = [
         normalize(title).replace(/\s/g, ""),
         normalize(artist).replace(/\s/g, ""),
         normalize(categories).replace(/\s/g, ""),
         normalize(decade).replace(/\s/g, ""),
+        normalize(year).replace(/\s/g, ""),
         normalize(originalVocal).replace(/\s/g, "")
       ].filter(Boolean);
 
       return {
         title,
         artist,
-        length,
         popularity,
         popularityScore: parsePopularity(popularity),
         categories,
         decade,
+        year,
         originalVocal,
         searchText,
         compactFields,
@@ -181,12 +184,12 @@ function hydrateIndexedSongs(indexPayload) {
       const popularityScore = typeof row[4] === "number" ? row[4] : parsePopularity(popularity);
       const decade = String(row[10] || "").trim();
       const originalVocal = String(row[11] || "").trim();
-      const length = String(row[12] || "").trim();
-      const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
+      const year = String(row[12] || "").trim();
+      const searchPieces = getSearchPieces({ title, artist, categories, decade, year, originalVocal });
       const searchText = String(row[5] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
         ? compactFieldSource
-        : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
+        : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(year).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
       const fuzzyTerms = fuzzyTermSource
         ? fuzzyTermSource
         : Array.from(new Set(tokenize(searchPieces.join(" "))));
@@ -194,9 +197,9 @@ function hydrateIndexedSongs(indexPayload) {
       return {
         title,
         artist,
-        length,
         categories,
         decade,
+        year,
         originalVocal,
         popularity,
         popularityScore,
@@ -416,7 +419,6 @@ function renderSongRows(songList, query = "") {
     <tr>
       <td data-label="Title">${query ? highlight(song.title, query) : escapeHtml(song.title)}</td>
       <td data-label="Artist">${query ? highlight(song.artist, query) : escapeHtml(song.artist)}</td>
-      <td class="length-cell" data-label="Length">${escapeHtml(song.length || "-")}</td>
     </tr>
   `).join("");
 }
@@ -491,9 +493,8 @@ function render() {
   }
 
   const queryTerms = tokenize(query);
-  const expandedQueryTerms = expandQueryTerms(queryTerms);
   const queryTermGroups = getQueryTermGroups(queryTerms);
-  let matches = [];
+  const rankedMatches = [];
   let matchCount = 0;
 
   for (const song of songs) {
@@ -505,15 +506,16 @@ function render() {
 
     matchCount += 1;
 
-    if (matches.length < maxRenderedRows) {
-      matches.push(song);
-    }
+    rankedMatches.push({
+      song,
+      rank: getMatchRank(song, normalizedQuery, queryTerms)
+    });
   }
 
   let usedTypoMatching = false;
 
   if (queryTerms.length && matchCount === 0) {
-    const exactMatches = new Set(matches);
+    const exactMatches = new Set(rankedMatches.map((match) => match.song));
     const fuzzyMatches = [];
 
     for (const song of songs) {
@@ -521,7 +523,7 @@ function render() {
         continue;
       }
 
-      const rank = fuzzyRank(song, expandedQueryTerms);
+      const rank = fuzzyRank(song, queryTerms);
 
       if (rank !== null) {
         fuzzyMatches.push({ song, rank });
@@ -531,9 +533,12 @@ function render() {
     fuzzyMatches
       .sort((a, b) => a.rank - b.rank || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
       .slice(0, fuzzyResultLimit)
-      .forEach((match) => matches.push(match.song));
+      .forEach((match) => rankedMatches.push({
+        song: match.song,
+        rank: getMatchRank(match.song, normalizedQuery, queryTerms)
+      }));
 
-    matchCount = matches.length;
+    matchCount = rankedMatches.length;
     usedTypoMatching = fuzzyMatches.length > 0;
   }
 
@@ -546,8 +551,13 @@ function render() {
     resultsSection.hidden = false;
   }
 
+  const matches = rankedMatches
+    .sort((a, b) => a.rank - b.rank || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+    .slice(0, maxRenderedRows)
+    .map((match) => match.song);
+
   resultsBody.innerHTML = renderSongRows(matches, query);
-  renderSimilarSongs(matchCount > 0 && matchCount < 5 ? matches : [], query, expandedQueryTerms);
+  renderSimilarSongs(matchCount > 0 && matchCount < 5 ? matches : [], query, queryTerms);
 
   emptyState.hidden = true;
   const shownText = matchCount > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
@@ -599,9 +609,8 @@ function parseCsv(csvText) {
   const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
   const categoriesIndex = findHeader(headers, ["categories", "category"]);
   const decadeIndex = findHeader(headers, ["decade", "decades"]);
+  const yearIndex = findHeader(headers, ["year", "release year", "release_year", "released"]);
   const originalVocalIndex = findHeader(headers, ["original vocal", "original_vocal", "vocal", "vocals", "voice"]);
-  const lengthIndex = findHeader(headers, ["length", "duration", "time"]);
-
   if (titleIndex === -1 || artistIndex === -1) {
     throw new Error("CSV must include title and artist columns.");
   }
@@ -609,10 +618,10 @@ function parseCsv(csvText) {
   return nonEmptyRows.map((items) => ({
     title: items[titleIndex] || "",
     artist: items[artistIndex] || "",
-    length: lengthIndex === -1 ? "" : items[lengthIndex] || "",
     popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
     categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || "",
     decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
+    year: yearIndex === -1 ? "" : items[yearIndex] || "",
     originalVocal: originalVocalIndex === -1 ? "" : items[originalVocalIndex] || ""
   }));
 }

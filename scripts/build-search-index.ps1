@@ -78,9 +78,9 @@ $indexedRows = New-Object System.Collections.Generic.List[object]
 foreach ($row in $rows) {
   $title = Get-Field $row @("title")
   $artist = Get-Field $row @("artist")
-  $length = Get-Field $row @("length", "duration", "time")
   $categories = Get-Field $row @("categories", "category")
   $decade = Get-Field $row @("decade", "decades")
+  $year = Get-Field $row @("year", "release year", "release_year", "released")
   $originalVocal = Get-Field $row @("original vocal", "original_vocal", "vocal", "vocals", "voice")
   $popularity = Get-Field $row @("popularity score", "popularity_score", "popularity", "score")
 
@@ -89,7 +89,7 @@ foreach ($row in $rows) {
   }
 
   $decadeAliases = Get-DecadeAliases $decade
-  $searchText = Normalize-SearchText "$title $artist $categories $decade $($decadeAliases -join ' ') $originalVocal"
+  $searchText = Normalize-SearchText "$title $artist $categories $decade $($decadeAliases -join ' ') $year $originalVocal"
   $titleStarts = Normalize-SearchText $title
   $artistStarts = Normalize-SearchText $artist
   $compactFieldsList = New-Object System.Collections.Generic.List[string]
@@ -97,9 +97,10 @@ foreach ($row in $rows) {
   $compactArtist = $artistStarts -replace "\s", ""
   $compactCategories = (Normalize-SearchText $categories) -replace "\s", ""
   $compactDecade = (Normalize-SearchText $decade) -replace "\s", ""
+  $compactYear = (Normalize-SearchText $year) -replace "\s", ""
   $compactOriginalVocal = (Normalize-SearchText $originalVocal) -replace "\s", ""
 
-  foreach ($compactField in @($compactTitle, $compactArtist, $compactCategories, $compactDecade, $compactOriginalVocal)) {
+  foreach ($compactField in @($compactTitle, $compactArtist, $compactCategories, $compactDecade, $compactYear, $compactOriginalVocal)) {
     if (-not [string]::IsNullOrWhiteSpace($compactField)) {
       $compactFieldsList.Add($compactField)
     }
@@ -125,7 +126,7 @@ foreach ($row in $rows) {
     $artistStarts,
     $decade.Trim(),
     $originalVocal.Trim(),
-    $length.Trim()
+    $year.Trim()
   ))
 }
 
