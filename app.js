@@ -2,8 +2,8 @@ const maxRenderedRows = 100;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260416-2852";
-const songCsvUrl = "songs.csv?v=20260416-2852";
+const songIndexUrl = "songs.index.json?v=20260416-2850";
+const songCsvUrl = "songs.csv?v=20260416-2850";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
