@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Overland Karaoke Song Search</title>
-    <link rel="stylesheet" href="styles.css?v=20260415-typo-scorehide">
+    <link rel="stylesheet" href="styles.css?v=20260416-hidden-categories">
   </head>
   <body>
     <main class="app-shell">
@@ -18,18 +18,74 @@
         </div>
 
         <form class="search-panel" id="song-search-form" role="search">
-          <label for="song-search">Search by title, artist, or category</label>
+          <label for="song-search">Search by title, artist, category, decade, or vocal</label>
           <div class="search-row">
             <input
               id="song-search"
               type="search"
               autocomplete="off"
-              placeholder="Search by song, artist, or category"
+              placeholder="Search by song, artist, category, decade, or vocal"
               aria-describedby="result-count"
             >
             <button id="clear-search" type="button">Clear</button>
           </div>
         </form>
+
+        <section class="browse-panel" aria-label="Browse songs">
+          <div class="browse-group browse-decade">
+            <p class="browse-label">Decade</p>
+            <div class="browse-buttons">
+              <button class="browse-button" type="button" data-search="70s">70s</button>
+              <button class="browse-button" type="button" data-search="80s">80s</button>
+              <button class="browse-button" type="button" data-search="90s">90s</button>
+              <button class="browse-button" type="button" data-search="2000s">2000s</button>
+              <button class="browse-button" type="button" data-search="2010s">2010s</button>
+            </div>
+          </div>
+
+          <div class="browse-group browse-vocal">
+            <p class="browse-label">Original vocal</p>
+            <div class="browse-buttons">
+              <button class="browse-button" type="button" data-search="male">Male</button>
+              <button class="browse-button" type="button" data-search="female">Female</button>
+              <button class="browse-button" type="button" data-search="mixed">Mixed</button>
+            </div>
+          </div>
+
+          <div class="browse-group browse-genre">
+            <p class="browse-label">Genre</p>
+            <div class="browse-buttons">
+              <button class="browse-button" type="button" data-search="pop">Pop</button>
+              <button class="browse-button" type="button" data-search="rock">Rock</button>
+              <button class="browse-button" type="button" data-search="country">Country</button>
+              <button class="browse-button" type="button" data-search="hip hop">Hip-Hop</button>
+              <button class="browse-button" type="button" data-search="rap">Rap</button>
+              <button class="browse-button" type="button" data-search="r b">R&amp;B</button>
+              <button class="browse-button" type="button" data-search="soul">Soul</button>
+              <button class="browse-button" type="button" data-search="alternative indie">Alternative / Indie</button>
+              <button class="browse-button" type="button" data-search="emo pop punk">Emo / Pop Punk</button>
+              <button class="browse-button" type="button" data-search="metal hard rock">Metal / Hard Rock</button>
+            </div>
+          </div>
+
+          <div class="browse-group browse-challenge">
+            <p class="browse-label">Vocal challenge</p>
+            <div class="browse-buttons">
+              <button class="browse-button" type="button" data-search="easy">Easy</button>
+              <button class="browse-button" type="button" data-search="medium">Medium</button>
+              <button class="browse-button" type="button" data-search="hard">Hard</button>
+              <button class="browse-button" type="button" data-search="vocal flex">Vocal Flex</button>
+            </div>
+          </div>
+
+          <div class="browse-group browse-social">
+            <p class="browse-label">Social singing</p>
+            <div class="browse-buttons">
+              <button class="browse-button" type="button" data-search="duet">Duet</button>
+              <button class="browse-button" type="button" data-search="group song">Group Songs</button>
+            </div>
+          </div>
+        </section>
 
         <p class="helper-copy">
           Pick your song, tell the host, and get ready.
@@ -51,7 +107,6 @@
               <tr>
                 <th class="title-column" scope="col">Title</th>
                 <th class="artist-column" scope="col">Artist</th>
-                <th scope="col">Categories</th>
               </tr>
             </thead>
             <tbody id="song-results"></tbody>
@@ -61,6 +116,24 @@
       </section>
 
       <section class="popular-band" aria-labelledby="popular-title">
+        <div class="popular-panel" id="similar-panel" hidden>
+          <div class="popular-heading">
+            <p class="eyebrow">Similar picks</p>
+            <h2 id="similar-title">Similar songs</h2>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="title-column" scope="col">Title</th>
+                  <th class="artist-column" scope="col">Artist</th>
+                </tr>
+              </thead>
+              <tbody id="similar-results"></tbody>
+            </table>
+          </div>
+        </div>
+
         <div class="popular-panel">
           <div class="popular-heading">
             <p class="eyebrow">Top picks</p>
@@ -72,7 +145,6 @@
                 <tr>
                   <th class="title-column" scope="col">Title</th>
                   <th class="artist-column" scope="col">Artist</th>
-                  <th scope="col">Categories</th>
                 </tr>
               </thead>
               <tbody id="popular-results"></tbody>
@@ -83,6 +155,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260415-typo-scorehide"></script>
+    <script src="app.js?v=20260416-vocal-buttons"></script>
   </body>
 </html>

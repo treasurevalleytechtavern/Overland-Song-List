@@ -6,9 +6,13 @@ const requestSongUrl = "https://overlandbar.com/request-a-song";
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
 const clearButton = document.querySelector("#clear-search");
+const browseButtons = document.querySelectorAll(".browse-button");
 const resultsBody = document.querySelector("#song-results");
 const resultCount = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
+const similarPanel = document.querySelector("#similar-panel");
+const similarBody = document.querySelector("#similar-results");
+const similarTitle = document.querySelector("#similar-title");
 const popularBody = document.querySelector("#popular-results");
 const popularEmptyState = document.querySelector("#popular-empty-state");
 
@@ -28,6 +32,40 @@ function normalize(value) {
 
 function tokenize(value) {
   return normalize(value).split(" ").filter(Boolean);
+}
+
+function getDecadeAliases(value) {
+  const decade = normalize(value);
+  const aliases = new Set();
+  const fourDigitMatch = decade.match(/^(\d{2})(\d{2})s$/);
+  const twoDigitMatch = decade.match(/^(\d{2})s$/);
+
+  if (decade) {
+    aliases.add(decade);
+  }
+
+  if (fourDigitMatch) {
+    aliases.add(`${fourDigitMatch[2]}s`);
+  }
+
+  if (twoDigitMatch) {
+    const year = Number(twoDigitMatch[1]);
+    aliases.add(`${year <= 30 ? "20" : "19"}${twoDigitMatch[1]}s`);
+  }
+
+  return Array.from(aliases);
+}
+
+function getSearchPieces(song) {
+  const decadeAliases = getDecadeAliases(song.decade);
+  return [
+    song.title,
+    song.artist,
+    song.categories,
+    song.decade,
+    ...decadeAliases,
+    song.originalVocal
+  ].filter(Boolean);
 }
 
 function parsePopularity(value) {
@@ -55,11 +93,16 @@ function indexSongs(nextSongs) {
       const artist = String(song.artist || "").trim();
       const popularity = String(song.popularity || "").trim();
       const categories = String(song.categories || "").trim();
-      const searchText = normalize(`${title} ${artist} ${categories}`);
+      const decade = String(song.decade || "").trim();
+      const originalVocal = String(song.originalVocal || "").trim();
+      const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
+      const searchText = normalize(searchPieces.join(" "));
       const compactFields = [
         normalize(title).replace(/\s/g, ""),
         normalize(artist).replace(/\s/g, ""),
-        normalize(categories).replace(/\s/g, "")
+        normalize(categories).replace(/\s/g, ""),
+        normalize(decade).replace(/\s/g, ""),
+        normalize(originalVocal).replace(/\s/g, "")
       ].filter(Boolean);
 
       return {
@@ -68,13 +111,67 @@ function indexSongs(nextSongs) {
         popularity,
         popularityScore: parsePopularity(popularity),
         categories,
+        decade,
+        originalVocal,
         searchText,
         compactFields,
         titleStarts: normalize(title),
         artistStarts: normalize(artist),
-        fuzzyTerms: Array.from(new Set(tokenize(`${title} ${artist} ${categories}`)))
+        fuzzyTerms: Array.from(new Set(tokenize(searchPieces.join(" "))))
       };
     })
+    .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+}
+
+function hydrateIndexedSongs(indexPayload) {
+  const rows = Array.isArray(indexPayload) ? indexPayload : indexPayload.songs;
+
+  if (!Array.isArray(rows)) {
+    throw new Error("Search index is not in the expected format.");
+  }
+
+  return rows
+    .map((row) => {
+      const compactFieldSource = Array.isArray(row[6])
+        ? row[6]
+        : row[6] && Array.isArray(row[6].value)
+          ? row[6].value
+          : null;
+      const fuzzyTermSource = Array.isArray(row[7])
+        ? row[7]
+        : row[7] && Array.isArray(row[7].value)
+          ? row[7].value
+          : null;
+      const title = String(row[0] || "").trim();
+      const artist = String(row[1] || "").trim();
+      const categories = String(row[2] || "").trim();
+      const popularity = String(row[3] || "").trim();
+      const popularityScore = typeof row[4] === "number" ? row[4] : parsePopularity(popularity);
+      const decade = String(row[10] || "").trim();
+      const originalVocal = String(row[11] || "").trim();
+      const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
+      const searchText = String(row[5] || normalize(searchPieces.join(" ")));
+      const compactFields = compactFieldSource
+        : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
+      const fuzzyTerms = fuzzyTermSource
+        : Array.from(new Set(tokenize(searchPieces.join(" "))));
+
+      return {
+        title,
+        artist,
+        categories,
+        decade,
+        originalVocal,
+        popularity,
+        popularityScore,
+        searchText,
+        compactFields,
+        fuzzyTerms,
+        titleStarts: String(row[8] || normalize(title)),
+        artistStarts: String(row[9] || normalize(artist))
+      };
+    })
+    .filter((song) => song.title || song.artist)
     .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
 }
 
@@ -176,9 +273,12 @@ function fuzzyRank(song, queryTerms) {
 function renderRequestSong(query) {
   const requestUrl = `${requestSongUrl}?song=${encodeURIComponent(query)}`;
   resultsBody.innerHTML = "";
+  if (similarPanel) {
+    similarPanel.hidden = true;
+  }
   emptyState.innerHTML = `
     <span>No songs found for "${escapeHtml(query)}".</span>
-    <a class="request-song-button" href="${requestUrl}" target="_blank" rel="noopener">Request a song</a>
+    <a class="request-song-button" href="${requestUrl}" target="_top">Request a song</a>
   `;
   emptyState.hidden = false;
   resultCount.textContent = "0 songs";
@@ -231,12 +331,80 @@ function renderPopularSongs() {
   popularEmptyState.hidden = popularSongs.length !== 0;
 }
 
+function getCategoryTerms(song) {
+  return tokenize(song.categories).filter((term) => term.length >= 3);
+}
+
+function renderSongRows(songList, query = "") {
+  return songList.map((song) => `
+    <tr>
+      <td data-label="Title">${query ? highlight(song.title, query) : escapeHtml(song.title)}</td>
+      <td data-label="Artist">${query ? highlight(song.artist, query) : escapeHtml(song.artist)}</td>
+      <td data-label="Categories">${query ? highlight(song.categories || "-", query) : escapeHtml(song.categories || "-")}</td>
+    </tr>
+  `).join("");
+}
+
+function renderSimilarSongs(matches, query, queryTerms) {
+  if (!similarPanel || !similarBody || !similarTitle) {
+    return;
+  }
+
+  similarPanel.hidden = true;
+  similarBody.innerHTML = "";
+
+  if (matches.length === 0 || matches.length >= 10) {
+    return;
+  }
+
+  const matchSet = new Set(matches);
+  const normalizedQuery = normalize(query);
+  const artistIntent = matches.some((song) => song.artistStarts.includes(normalizedQuery));
+  const titleIntent = matches.some((song) => song.titleStarts.includes(normalizedQuery));
+  let similarSongs = [];
+
+  if (titleIntent && !artistIntent) {
+    const artists = new Set(matches.map((song) => normalize(song.artist)).filter(Boolean));
+    similarSongs = songs.filter((song) => !matchSet.has(song) && artists.has(normalize(song.artist)));
+    similarTitle.textContent = "More by this artist";
+  } else {
+    const categoryTerms = new Set(matches.flatMap(getCategoryTerms));
+
+    similarSongs = songs
+      .map((song) => {
+        if (matchSet.has(song)) {
+          return null;
+        }
+
+        const overlap = getCategoryTerms(song).filter((term) => categoryTerms.has(term)).length;
+        return overlap ? { song, overlap } : null;
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.overlap - a.overlap || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+      .map((match) => match.song);
+
+    similarTitle.textContent = "Songs in a similar lane";
+  }
+
+  const visibleSimilarSongs = similarSongs.slice(0, Math.max(0, 10 - matches.length));
+
+  if (visibleSimilarSongs.length === 0) {
+    return;
+  }
+
+  similarBody.innerHTML = renderSongRows(visibleSimilarSongs);
+  similarPanel.hidden = false;
+}
+
 function render() {
   const query = searchInput.value.trim();
   const normalizedQuery = normalize(query);
 
   if (normalizedQuery.length < minimumSearchLength) {
     resultsBody.innerHTML = "";
+    if (similarPanel) {
+      similarPanel.hidden = true;
+    }
     emptyState.textContent = "Type at least 2 characters to search.";
     emptyState.hidden = false;
     resultCount.textContent = `${songs.length.toLocaleString()} songs loaded`;
@@ -244,10 +412,16 @@ function render() {
   }
 
   const queryTerms = tokenize(query);
-  let matches = songs.filter((song) => song.searchText.includes(normalizedQuery));
+  let matches = songs.filter((song) => {
+    if (queryTerms.length === 1) {
+      return song.fuzzyTerms.includes(queryTerms[0]);
+    }
+
+    return song.searchText.includes(normalizedQuery);
+  });
   let usedTypoMatching = false;
 
-  if (queryTerms.length && matches.length < maxRenderedRows) {
+  if (queryTerms.length && matches.length === 0) {
     const exactMatches = new Set(matches);
     const fuzzyMatches = [];
 
@@ -278,13 +452,8 @@ function render() {
     return;
   }
 
-  resultsBody.innerHTML = visibleMatches.map((song) => `
-    <tr>
-      <td data-label="Title">${highlight(song.title, query)}</td>
-      <td data-label="Artist">${highlight(song.artist, query)}</td>
-      <td data-label="Categories">${highlight(song.categories || "-", query)}</td>
-    </tr>
-  `).join("");
+  resultsBody.innerHTML = renderSongRows(visibleMatches, query);
+  renderSimilarSongs(matches, query, queryTerms);
 
   emptyState.hidden = matches.length !== 0;
   const shownText = matches.length > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
@@ -335,6 +504,8 @@ function parseCsv(csvText) {
   const artistIndex = headers.indexOf("artist");
   const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
   const categoriesIndex = findHeader(headers, ["categories", "category"]);
+  const decadeIndex = findHeader(headers, ["decade", "decades"]);
+  const originalVocalIndex = findHeader(headers, ["original vocal", "original_vocal", "vocal", "vocals", "voice"]);
 
   if (titleIndex === -1 || artistIndex === -1) {
     throw new Error("CSV must include title and artist columns.");
@@ -344,12 +515,19 @@ function parseCsv(csvText) {
     title: items[titleIndex] || "",
     artist: items[artistIndex] || "",
     popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
-    categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || ""
+    categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || "",
+    decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
+    originalVocal: originalVocalIndex === -1 ? "" : items[originalVocalIndex] || ""
   }));
 }
 
 function setSongs(nextSongs) {
   songs = indexSongs(nextSongs);
+  setPreparedSongs(songs);
+}
+
+function setPreparedSongs(nextSongs) {
+  songs = nextSongs;
   popularSongs = [...songs]
     .sort((a, b) => b.popularityScore - a.popularityScore || a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist))
     .slice(0, 20);
@@ -359,7 +537,14 @@ function setSongs(nextSongs) {
 
 async function loadInitialSongs() {
   try {
-    let response = await fetch("songs.csv", { cache: "no-store" });
+    let response = await fetch("songs.index.json", { cache: "no-store" });
+
+    if (response.ok) {
+      setPreparedSongs(hydrateIndexedSongs(await response.json()));
+      return;
+    }
+
+    response = await fetch("songs.csv", { cache: "no-store" });
 
     if (!response.ok) {
       response = await fetch("data/songs.csv", { cache: "no-store" });
@@ -382,6 +567,15 @@ async function loadInitialSongs() {
 searchInput.addEventListener("input", () => {
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(render, 80);
+});
+
+browseButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    searchInput.value = button.dataset.search || "";
+    window.clearTimeout(searchTimer);
+    render();
+    searchInput.focus({ preventScroll: true });
+  });
 });
 
 searchInput.addEventListener("search", render);
