@@ -7,6 +7,7 @@ const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
 const clearButton = document.querySelector("#clear-search");
 const browseButtons = document.querySelectorAll(".browse-button");
+const resultsSection = document.querySelector("#results-section");
 const resultsBody = document.querySelector("#song-results");
 const resultCount = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
@@ -95,6 +96,7 @@ function indexSongs(nextSongs) {
       const categories = String(song.categories || "").trim();
       const decade = String(song.decade || "").trim();
       const originalVocal = String(song.originalVocal || "").trim();
+      const length = String(song.length || "").trim();
       const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
       const searchText = normalize(searchPieces.join(" "));
       const compactFields = [
@@ -108,6 +110,7 @@ function indexSongs(nextSongs) {
       return {
         title,
         artist,
+        length,
         popularity,
         popularityScore: parsePopularity(popularity),
         categories,
@@ -120,7 +123,7 @@ function indexSongs(nextSongs) {
         fuzzyTerms: Array.from(new Set(tokenize(searchPieces.join(" "))))
       };
     })
-    .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+    ;
 }
 
 function hydrateIndexedSongs(indexPayload) {
@@ -149,6 +152,7 @@ function hydrateIndexedSongs(indexPayload) {
       const popularityScore = typeof row[4] === "number" ? row[4] : parsePopularity(popularity);
       const decade = String(row[10] || "").trim();
       const originalVocal = String(row[11] || "").trim();
+      const length = String(row[12] || "").trim();
       const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
       const searchText = String(row[5] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
@@ -159,6 +163,7 @@ function hydrateIndexedSongs(indexPayload) {
       return {
         title,
         artist,
+        length,
         categories,
         decade,
         originalVocal,
@@ -172,7 +177,7 @@ function hydrateIndexedSongs(indexPayload) {
       };
     })
     .filter((song) => song.title || song.artist)
-    .sort((a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+    ;
 }
 
 function editDistanceWithin(a, b, maxDistance) {
@@ -272,6 +277,9 @@ function fuzzyRank(song, queryTerms) {
 
 function renderRequestSong(query) {
   const requestUrl = `${requestSongUrl}?song=${encodeURIComponent(query)}`;
+  if (resultsSection) {
+    resultsSection.hidden = false;
+  }
   resultsBody.innerHTML = "";
   if (similarPanel) {
     similarPanel.hidden = true;
@@ -282,6 +290,20 @@ function renderRequestSong(query) {
   `;
   emptyState.hidden = false;
   resultCount.textContent = "0 songs";
+}
+
+function hideSearchResults() {
+  if (resultsSection) {
+    resultsSection.hidden = true;
+  }
+
+  resultsBody.innerHTML = "";
+  emptyState.hidden = true;
+  resultCount.textContent = songs.length ? `${songs.length.toLocaleString()} songs loaded` : "Loading songs...";
+
+  if (similarPanel) {
+    similarPanel.hidden = true;
+  }
 }
 
 function escapeHtml(value) {
@@ -324,7 +346,6 @@ function renderPopularSongs() {
     <tr>
       <td data-label="Title">${escapeHtml(song.title)}</td>
       <td data-label="Artist">${escapeHtml(song.artist)}</td>
-      <td data-label="Categories">${escapeHtml(song.categories || "-")}</td>
     </tr>
   `).join("");
 
@@ -340,7 +361,7 @@ function renderSongRows(songList, query = "") {
     <tr>
       <td data-label="Title">${query ? highlight(song.title, query) : escapeHtml(song.title)}</td>
       <td data-label="Artist">${query ? highlight(song.artist, query) : escapeHtml(song.artist)}</td>
-      <td data-label="Categories">${query ? highlight(song.categories || "-", query) : escapeHtml(song.categories || "-")}</td>
+      <td class="length-cell" data-label="Length">${escapeHtml(song.length || "-")}</td>
     </tr>
   `).join("");
 }
@@ -370,17 +391,26 @@ function renderSimilarSongs(matches, query, queryTerms) {
   } else {
     const categoryTerms = new Set(matches.flatMap(getCategoryTerms));
 
-    similarSongs = songs
-      .map((song) => {
-        if (matchSet.has(song)) {
-          return null;
-        }
+    const similarLimit = Math.max(0, 10 - matches.length);
+    const candidates = [];
 
-        const overlap = getCategoryTerms(song).filter((term) => categoryTerms.has(term)).length;
-        return overlap ? { song, overlap } : null;
-      })
-      .filter(Boolean)
+    for (const song of songs) {
+      if (matchSet.has(song)) {
+        continue;
+      }
+
+      const overlap = getCategoryTerms(song).filter((term) => categoryTerms.has(term)).length;
+
+      if (!overlap) {
+        continue;
+      }
+
+      candidates.push({ song, overlap });
+    }
+
+    similarSongs = candidates
       .sort((a, b) => b.overlap - a.overlap || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+      .slice(0, similarLimit)
       .map((match) => match.song);
 
     similarTitle.textContent = "Songs in a similar lane";
@@ -401,27 +431,33 @@ function render() {
   const normalizedQuery = normalize(query);
 
   if (normalizedQuery.length < minimumSearchLength) {
-    resultsBody.innerHTML = "";
-    if (similarPanel) {
-      similarPanel.hidden = true;
-    }
-    emptyState.textContent = "Type at least 2 characters to search.";
-    emptyState.hidden = false;
-    resultCount.textContent = `${songs.length.toLocaleString()} songs loaded`;
+    hideSearchResults();
     return;
   }
 
   const queryTerms = tokenize(query);
-  let matches = songs.filter((song) => {
-    if (queryTerms.length === 1) {
-      return song.fuzzyTerms.includes(queryTerms[0]);
+  let matches = [];
+  let matchCount = 0;
+
+  for (const song of songs) {
+    const isMatch = queryTerms.length === 1
+      ? song.fuzzyTerms.includes(queryTerms[0])
+      : song.searchText.includes(normalizedQuery);
+
+    if (!isMatch) {
+      continue;
     }
 
-    return song.searchText.includes(normalizedQuery);
-  });
+    matchCount += 1;
+
+    if (matches.length < maxRenderedRows) {
+      matches.push(song);
+    }
+  }
+
   let usedTypoMatching = false;
 
-  if (queryTerms.length && matches.length === 0) {
+  if (queryTerms.length && matchCount === 0) {
     const exactMatches = new Set(matches);
     const fuzzyMatches = [];
 
@@ -442,23 +478,26 @@ function render() {
       .slice(0, fuzzyResultLimit)
       .forEach((match) => matches.push(match.song));
 
+    matchCount = matches.length;
     usedTypoMatching = fuzzyMatches.length > 0;
   }
 
-  const visibleMatches = matches.slice(0, maxRenderedRows);
-
-  if (matches.length === 0) {
+  if (matchCount === 0) {
     renderRequestSong(query);
     return;
   }
 
-  resultsBody.innerHTML = renderSongRows(visibleMatches, query);
-  renderSimilarSongs(matches, query, queryTerms);
+  if (resultsSection) {
+    resultsSection.hidden = false;
+  }
 
-  emptyState.hidden = matches.length !== 0;
-  const shownText = matches.length > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
+  resultsBody.innerHTML = renderSongRows(matches, query);
+  renderSimilarSongs(matchCount < 10 ? matches : [], query, queryTerms);
+
+  emptyState.hidden = true;
+  const shownText = matchCount > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
   const typoText = usedTypoMatching ? " including close matches" : "";
-  resultCount.textContent = `${matches.length.toLocaleString()} song${matches.length === 1 ? "" : "s"}${typoText}${shownText}`;
+  resultCount.textContent = `${matchCount.toLocaleString()} song${matchCount === 1 ? "" : "s"}${typoText}${shownText}`;
 }
 
 function parseCsv(csvText) {
@@ -506,6 +545,7 @@ function parseCsv(csvText) {
   const categoriesIndex = findHeader(headers, ["categories", "category"]);
   const decadeIndex = findHeader(headers, ["decade", "decades"]);
   const originalVocalIndex = findHeader(headers, ["original vocal", "original_vocal", "vocal", "vocals", "voice"]);
+  const lengthIndex = findHeader(headers, ["length", "duration", "time"]);
 
   if (titleIndex === -1 || artistIndex === -1) {
     throw new Error("CSV must include title and artist columns.");
@@ -514,6 +554,7 @@ function parseCsv(csvText) {
   return nonEmptyRows.map((items) => ({
     title: items[titleIndex] || "",
     artist: items[artistIndex] || "",
+    length: lengthIndex === -1 ? "" : items[lengthIndex] || "",
     popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
     categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || "",
     decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
@@ -528,11 +569,19 @@ function setSongs(nextSongs) {
 
 function setPreparedSongs(nextSongs) {
   songs = nextSongs;
-  popularSongs = [...songs]
-    .sort((a, b) => b.popularityScore - a.popularityScore || a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist))
-    .slice(0, 20);
+  popularSongs = [];
+
+  for (const song of songs) {
+    popularSongs.push(song);
+    popularSongs.sort((a, b) => b.popularityScore - a.popularityScore || a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist));
+
+    if (popularSongs.length > 20) {
+      popularSongs.pop();
+    }
+  }
+
   renderPopularSongs();
-  render();
+  hideSearchResults();
 }
 
 async function loadInitialSongs() {

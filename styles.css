@@ -49,7 +49,7 @@ form {
   border-bottom: 1px solid var(--line);
   background:
     linear-gradient(90deg, rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.78)),
-    url("assets/overland-bar-logo.png") right 7vw center / min(34vw, 390px) auto no-repeat;
+    url("assets/good-times-karaoke.jpg") right 7vw center / min(26vw, 250px) auto no-repeat;
 }
 
 .brand-row,
@@ -175,6 +175,8 @@ button:hover {
 .browse-group {
   display: grid;
   gap: 8px;
+  border-left: 3px solid rgba(49, 232, 255, 0.44);
+  padding-left: 10px;
 }
 
 .browse-label {
@@ -205,6 +207,49 @@ button:hover {
 .browse-button:hover,
 .browse-button:focus-visible {
   background: rgba(49, 232, 255, 0.18);
+}
+
+.browse-vocal {
+  border-left-color: rgba(255, 70, 98, 0.65);
+}
+
+.browse-vocal .browse-label {
+  color: var(--red);
+}
+
+.browse-vocal .browse-button {
+  border-color: rgba(255, 70, 98, 0.52);
+  background: rgba(255, 70, 98, 0.09);
+}
+
+.browse-genre {
+  border-left-color: rgba(255, 209, 42, 0.68);
+}
+
+.browse-genre .browse-label {
+  color: var(--gold);
+}
+
+.browse-genre .browse-button {
+  border-color: rgba(255, 209, 42, 0.52);
+  background: rgba(255, 209, 42, 0.08);
+}
+
+.browse-challenge {
+  border-left-color: rgba(255, 255, 255, 0.46);
+}
+
+.browse-challenge .browse-label {
+  color: var(--white);
+}
+
+.browse-challenge .browse-button {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.browse-social {
+  border-left-color: rgba(49, 232, 255, 0.7);
 }
 
 .popular-panel {
@@ -260,7 +305,7 @@ button:hover {
 
 table {
   width: 100%;
-  min-width: 760px;
+  min-width: 480px;
   table-layout: fixed;
   border-collapse: collapse;
 }
@@ -305,21 +350,23 @@ td:first-child {
 }
 
 .title-column {
-  width: 32%;
+  width: 48%;
 }
 
 .artist-column {
-  width: 28%;
+  width: 38%;
+}
+
+.length-column,
+.length-cell {
+  width: 100px;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .compact-table th,
 .compact-table td {
   padding: 12px 14px;
-}
-
-th:nth-child(3),
-td:nth-child(3) {
-  width: 240px;
 }
 
 .empty-state {
@@ -361,7 +408,7 @@ mark {
     padding-top: 24px;
     background:
       linear-gradient(180deg, rgba(5, 5, 5, 0.9), rgba(5, 5, 5, 0.96)),
-      url("assets/overland-bar-logo.png") right 18px top 18px / 145px auto no-repeat;
+      url("assets/good-times-karaoke.jpg") right 18px top 18px / 112px auto no-repeat;
   }
 
   .brand-row {

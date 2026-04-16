@@ -78,6 +78,7 @@ $indexedRows = New-Object System.Collections.Generic.List[object]
 foreach ($row in $rows) {
   $title = Get-Field $row @("title")
   $artist = Get-Field $row @("artist")
+  $length = Get-Field $row @("length", "duration", "time")
   $categories = Get-Field $row @("categories", "category")
   $decade = Get-Field $row @("decade", "decades")
   $originalVocal = Get-Field $row @("original vocal", "original_vocal", "vocal", "vocals", "voice")
@@ -123,7 +124,8 @@ foreach ($row in $rows) {
     $titleStarts,
     $artistStarts,
     $decade.Trim(),
-    $originalVocal.Trim()
+    $originalVocal.Trim(),
+    $length.Trim()
   ))
 }
 

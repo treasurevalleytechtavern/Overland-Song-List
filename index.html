@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Overland Karaoke Song Search</title>
-    <link rel="stylesheet" href="styles.css?v=20260416-hidden-categories">
+    <link rel="stylesheet" href="styles.css?v=20260416-length-speed-layout">
   </head>
   <body>
     <main class="app-shell">
       <section class="search-band" aria-labelledby="page-title">
         <div class="brand-row">
-          <img class="brand-mark" src="assets/overland-bar-logo.png" alt="Overland Bar">
+          <img class="brand-mark" src="assets/good-times-karaoke.jpg" alt="Good Times Karaoke at the Overland Bar">
           <div>
             <p class="eyebrow">Overland karaoke</p>
             <h1 id="page-title">Search the karaoke book.</h1>
@@ -31,7 +31,61 @@
           </div>
         </form>
 
+        <p class="helper-copy">
+          Pick your song, tell the host, and get ready.
+        </p>
+      </section>
+
+      <section class="results-band" id="results-section" aria-labelledby="results-title" hidden>
+        <div class="summary-row">
+          <div>
+            <p class="eyebrow">Song book</p>
+            <h2 id="results-title">Available songs</h2>
+          </div>
+          <p id="result-count" class="result-count" aria-live="polite">Loading songs...</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="title-column" scope="col">Title</th>
+                <th class="artist-column" scope="col">Artist</th>
+                <th class="length-column" scope="col">Length</th>
+              </tr>
+            </thead>
+            <tbody id="song-results"></tbody>
+          </table>
+          <p id="empty-state" class="empty-state" hidden>No songs match that search.</p>
+        </div>
+      </section>
+
+      <section class="popular-band" aria-labelledby="popular-title">
+        <div class="popular-panel" id="similar-panel" hidden>
+          <div class="popular-heading">
+            <p class="eyebrow">Similar picks</p>
+            <h2 id="similar-title">Similar songs</h2>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="title-column" scope="col">Title</th>
+                  <th class="artist-column" scope="col">Artist</th>
+                  <th class="length-column" scope="col">Length</th>
+                </tr>
+              </thead>
+              <tbody id="similar-results"></tbody>
+            </table>
+          </div>
+        </div>
+
         <section class="browse-panel" aria-label="Browse songs">
+          <div class="browse-heading">
+            <p class="eyebrow">Browse</p>
+            <h2>Find something fast</h2>
+          </div>
+
           <div class="browse-group browse-decade">
             <p class="browse-label">Decade</p>
             <div class="browse-buttons">
@@ -87,53 +141,6 @@
           </div>
         </section>
 
-        <p class="helper-copy">
-          Pick your song, tell the host, and get ready.
-        </p>
-      </section>
-
-      <section class="results-band" aria-labelledby="results-title">
-        <div class="summary-row">
-          <div>
-            <p class="eyebrow">Song book</p>
-            <h2 id="results-title">Available songs</h2>
-          </div>
-          <p id="result-count" class="result-count" aria-live="polite">Loading songs...</p>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="title-column" scope="col">Title</th>
-                <th class="artist-column" scope="col">Artist</th>
-              </tr>
-            </thead>
-            <tbody id="song-results"></tbody>
-          </table>
-          <p id="empty-state" class="empty-state" hidden>No songs match that search.</p>
-        </div>
-      </section>
-
-      <section class="popular-band" aria-labelledby="popular-title">
-        <div class="popular-panel" id="similar-panel" hidden>
-          <div class="popular-heading">
-            <p class="eyebrow">Similar picks</p>
-            <h2 id="similar-title">Similar songs</h2>
-          </div>
-          <div class="table-wrap compact-table">
-            <table>
-              <thead>
-                <tr>
-                  <th class="title-column" scope="col">Title</th>
-                  <th class="artist-column" scope="col">Artist</th>
-                </tr>
-              </thead>
-              <tbody id="similar-results"></tbody>
-            </table>
-          </div>
-        </div>
-
         <div class="popular-panel">
           <div class="popular-heading">
             <p class="eyebrow">Top picks</p>
@@ -145,6 +152,7 @@
                 <tr>
                   <th class="title-column" scope="col">Title</th>
                   <th class="artist-column" scope="col">Artist</th>
+                  <th class="length-column" scope="col">Length</th>
                 </tr>
               </thead>
               <tbody id="popular-results"></tbody>
@@ -155,6 +163,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260416-vocal-buttons"></script>
+    <script src="app.js?v=20260416-length-speed-layout"></script>
   </body>
 </html>
