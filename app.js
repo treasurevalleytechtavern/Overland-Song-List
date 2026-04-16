@@ -74,6 +74,7 @@ function getSearchPieces(song) {
     song.title,
     song.artist,
     song.categories,
+    song.socialSinging,
     song.decade,
     ...decadeAliases,
     song.year,
@@ -125,15 +126,17 @@ function indexSongs(nextSongs) {
       const artist = String(song.artist || "").trim();
       const popularity = String(song.popularity || "").trim();
       const categories = String(song.categories || "").trim();
+      const socialSinging = String(song.socialSinging || "").trim();
       const decade = String(song.decade || "").trim();
       const originalVocal = String(song.originalVocal || "").trim();
       const year = String(song.year || "").trim();
-      const searchPieces = getSearchPieces({ title, artist, categories, decade, year, originalVocal });
+      const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
       const searchText = normalize(searchPieces.join(" "));
       const compactFields = [
         normalize(title).replace(/\s/g, ""),
         normalize(artist).replace(/\s/g, ""),
         normalize(categories).replace(/\s/g, ""),
+        normalize(socialSinging).replace(/\s/g, ""),
         normalize(decade).replace(/\s/g, ""),
         normalize(year).replace(/\s/g, ""),
         normalize(originalVocal).replace(/\s/g, "")
@@ -145,6 +148,7 @@ function indexSongs(nextSongs) {
         popularity,
         popularityScore: parsePopularity(popularity),
         categories,
+        socialSinging,
         decade,
         year,
         originalVocal,
@@ -185,11 +189,12 @@ function hydrateIndexedSongs(indexPayload) {
       const decade = String(row[10] || "").trim();
       const originalVocal = String(row[11] || "").trim();
       const year = String(row[12] || "").trim();
-      const searchPieces = getSearchPieces({ title, artist, categories, decade, year, originalVocal });
+      const socialSinging = String(row[13] || "").trim();
+      const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
       const searchText = String(row[5] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
         ? compactFieldSource
-        : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(year).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
+        : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(socialSinging).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(year).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
       const fuzzyTerms = fuzzyTermSource
         ? fuzzyTermSource
         : Array.from(new Set(tokenize(searchPieces.join(" "))));
@@ -198,6 +203,7 @@ function hydrateIndexedSongs(indexPayload) {
         title,
         artist,
         categories,
+        socialSinging,
         decade,
         year,
         originalVocal,
@@ -608,6 +614,7 @@ function parseCsv(csvText) {
   const artistIndex = headers.indexOf("artist");
   const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
   const categoriesIndex = findHeader(headers, ["categories", "category"]);
+  const socialSingingIndex = findHeader(headers, ["social singing", "social_singing", "singing type", "singing_type"]);
   const decadeIndex = findHeader(headers, ["decade", "decades"]);
   const yearIndex = findHeader(headers, ["year", "release year", "release_year", "released"]);
   const originalVocalIndex = findHeader(headers, ["original vocal", "original_vocal", "vocal", "vocals", "voice"]);
@@ -620,6 +627,7 @@ function parseCsv(csvText) {
     artist: items[artistIndex] || "",
     popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
     categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || "",
+    socialSinging: socialSingingIndex === -1 ? "" : items[socialSingingIndex] || "",
     decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
     year: yearIndex === -1 ? "" : items[yearIndex] || "",
     originalVocal: originalVocalIndex === -1 ? "" : items[originalVocalIndex] || ""
