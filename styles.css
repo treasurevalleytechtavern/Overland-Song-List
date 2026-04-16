@@ -239,19 +239,6 @@ button:hover {
   background: rgba(255, 209, 42, 0.08);
 }
 
-.browse-challenge {
-  border-left-color: rgba(255, 255, 255, 0.46);
-}
-
-.browse-challenge .browse-label {
-  color: var(--white);
-}
-
-.browse-challenge .browse-button {
-  border-color: rgba(255, 255, 255, 0.34);
-  background: rgba(255, 255, 255, 0.07);
-}
-
 .browse-social {
   border-left-color: rgba(49, 232, 255, 0.7);
 }
@@ -452,11 +439,6 @@ tbody tr:hover {
 td:first-child {
   color: #ffffff;
   font-weight: 700;
-}
-
-.score-cell,
-.ob-score {
-  display: none !important;
 }
 
 .title-column {

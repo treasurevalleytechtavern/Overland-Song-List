@@ -2,8 +2,8 @@ const maxRenderedRows = 100;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260416-2850";
-const songCsvUrl = "songs.csv?v=20260416-2850";
+const songIndexUrl = "songs.index.json?v=20260416-current-fields";
+const songCsvUrl = "songs.csv?v=20260416-current-fields";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -176,11 +176,6 @@ function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") 
   return null;
 }
 
-function parsePopularity(value) {
-  const score = parseFloat(String(value || "").replace(/[^0-9.-]/g, ""));
-  return isFinite(score) ? score : 0;
-}
-
 function findHeader(headers, candidates) {
   for (let index = 0; index < candidates.length; index += 1) {
     const headerIndex = headers.indexOf(candidates[index]);
@@ -199,7 +194,6 @@ function indexSongs(nextSongs) {
     .map((song) => {
       const title = String(song.title || "").trim();
       const artist = String(song.artist || "").trim();
-      const popularity = String(song.popularity || "").trim();
       const categories = String(song.categories || "").trim();
       const socialSinging = String(song.socialSinging || "").trim();
       const decade = String(song.decade || "").trim();
@@ -220,8 +214,6 @@ function indexSongs(nextSongs) {
       return {
         title,
         artist,
-        popularity,
-        popularityScore: parsePopularity(popularity),
         categories,
         socialSinging,
         decade,
@@ -246,27 +238,25 @@ function hydrateIndexedSongs(indexPayload) {
 
   return rows
     .map((row) => {
-      const compactFieldSource = Array.isArray(row[6])
-        ? row[6]
-        : row[6] && Array.isArray(row[6].value)
-          ? row[6].value
+      const compactFieldSource = Array.isArray(row[4])
+        ? row[4]
+        : row[4] && Array.isArray(row[4].value)
+          ? row[4].value
           : null;
-      const fuzzyTermSource = Array.isArray(row[7])
-        ? row[7]
-        : row[7] && Array.isArray(row[7].value)
-          ? row[7].value
+      const fuzzyTermSource = Array.isArray(row[5])
+        ? row[5]
+        : row[5] && Array.isArray(row[5].value)
+          ? row[5].value
           : null;
       const title = String(row[0] || "").trim();
       const artist = String(row[1] || "").trim();
       const categories = String(row[2] || "").trim();
-      const popularity = String(row[3] || "").trim();
-      const popularityScore = typeof row[4] === "number" ? row[4] : parsePopularity(popularity);
-      const decade = String(row[10] || "").trim();
-      const originalVocal = String(row[11] || "").trim();
-      const year = String(row[12] || "").trim();
-      const socialSinging = String(row[13] || "").trim();
+      const decade = String(row[8] || "").trim();
+      const originalVocal = String(row[9] || "").trim();
+      const year = String(row[10] || "").trim();
+      const socialSinging = String(row[11] || "").trim();
       const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
-      const searchText = String(row[5] || normalize(searchPieces.join(" ")));
+      const searchText = String(row[3] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
         ? compactFieldSource
         : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(socialSinging).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(year).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
@@ -282,13 +272,11 @@ function hydrateIndexedSongs(indexPayload) {
         decade,
         year,
         originalVocal,
-        popularity,
-        popularityScore,
         searchText,
         compactFields,
         fuzzyTerms,
-        titleStarts: String(row[8] || normalize(title)),
-        artistStarts: String(row[9] || normalize(artist))
+        titleStarts: String(row[6] || normalize(title)),
+        artistStarts: String(row[7] || normalize(artist))
       };
     })
     .filter((song) => song.title || song.artist)
@@ -611,6 +599,7 @@ function renderSimilarSongs(matches, query, queryTerms) {
       b.overlap - a.overlap
       || a.yearDistance - b.yearDistance
       || a.song.title.localeCompare(b.song.title)
+      || a.song.artist.localeCompare(b.song.artist)
     )
     .map((match) => match.song);
 
@@ -678,7 +667,7 @@ function render() {
     }
 
     fuzzyMatches
-      .sort((a, b) => a.rank - b.rank || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+      .sort((a, b) => a.rank - b.rank || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
       .slice(0, fuzzyResultLimit)
       .forEach((match) => rankedMatches.push({
         song: match.song,
@@ -701,7 +690,7 @@ function render() {
   currentSearchQuery = query;
   visibleResultCount = maxRenderedRows;
   currentSearchMatches = rankedMatches
-    .sort((a, b) => a.rank - b.rank || b.song.popularityScore - a.song.popularityScore || a.song.title.localeCompare(b.song.title))
+    .sort((a, b) => a.rank - b.rank || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
     .map((match) => match.song);
 
   renderVisibleSearchResults(matchCount, usedTypoMatching);
@@ -749,7 +738,6 @@ function parseCsv(csvText) {
   const headers = headerRow.map((item) => normalize(item));
   const titleIndex = headers.indexOf("title");
   const artistIndex = headers.indexOf("artist");
-  const popularityIndex = findHeader(headers, ["popularity score", "popularity_score", "popularity", "score"]);
   const categoriesIndex = findHeader(headers, ["categories", "category"]);
   const socialSingingIndex = findHeader(headers, ["social singing", "social_singing", "singing type", "singing_type"]);
   const decadeIndex = findHeader(headers, ["decade", "decades"]);
@@ -762,7 +750,6 @@ function parseCsv(csvText) {
   return nonEmptyRows.map((items) => ({
     title: items[titleIndex] || "",
     artist: items[artistIndex] || "",
-    popularity: popularityIndex === -1 ? "" : items[popularityIndex] || "",
     categories: categoriesIndex === -1 ? "" : items[categoriesIndex] || "",
     socialSinging: socialSingingIndex === -1 ? "" : items[socialSingingIndex] || "",
     decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
