@@ -371,7 +371,7 @@ function renderSimilarSongs(matches, query, queryTerms) {
   similarPanel.hidden = true;
   similarBody.innerHTML = "";
 
-  if (matches.length === 0 || matches.length >= 10) {
+  if (matches.length === 0 || matches.length >= 5) {
     return;
   }
 
@@ -388,7 +388,7 @@ function renderSimilarSongs(matches, query, queryTerms) {
   } else {
     const categoryTerms = new Set(matches.flatMap(getCategoryTerms));
 
-    const similarLimit = Math.max(0, 10 - matches.length);
+    const similarLimit = Math.max(0, 5 - matches.length);
     const candidates = [];
 
     for (const song of songs) {
@@ -413,7 +413,7 @@ function renderSimilarSongs(matches, query, queryTerms) {
     similarTitle.textContent = "Songs in a similar lane";
   }
 
-  const visibleSimilarSongs = similarSongs.slice(0, Math.max(0, 10 - matches.length));
+  const visibleSimilarSongs = similarSongs.slice(0, Math.max(0, 5 - matches.length));
 
   if (visibleSimilarSongs.length === 0) {
     return;
@@ -489,7 +489,7 @@ function render() {
   }
 
   resultsBody.innerHTML = renderSongRows(matches, query);
-  renderSimilarSongs(matchCount < 10 ? matches : [], query, queryTerms);
+  renderSimilarSongs(matchCount > 0 && matchCount < 5 ? matches : [], query, queryTerms);
 
   emptyState.hidden = true;
   const shownText = matchCount > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
