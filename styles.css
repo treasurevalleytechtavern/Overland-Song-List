@@ -441,50 +441,39 @@ mark {
     min-width: 100%;
   }
 
-  thead {
-    display: none;
-  }
-
-  tbody,
-  tr,
   th,
   td {
-    display: block;
+    padding: 11px 8px;
   }
 
-  tr {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0;
-    border-bottom: 1px solid var(--line);
+  .title-column {
+    width: 45%;
   }
 
-  tbody tr:last-child {
-    border-bottom: 0;
+  .artist-column {
+    width: 40%;
   }
 
-  td {
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(48, 48, 48, 0.72);
+  .length-column,
+  .length-cell {
+    width: 15%;
+    min-width: 58px;
+    text-align: right;
+  }
+
+  th {
+    font-size: 0.68rem;
   }
 
   td:nth-child(1),
   td:nth-child(2) {
     min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   td:nth-child(3) {
-    grid-column: 1 / -1;
-  }
-
-  td::before {
-    content: attr(data-label);
-    display: block;
-    margin-bottom: 4px;
-    color: var(--cyan);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
+    white-space: nowrap;
   }
 
 }
