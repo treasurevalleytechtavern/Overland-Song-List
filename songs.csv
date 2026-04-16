@@ -1,9 +1,9 @@
 title,artist,popularity score,categories,decade,original vocal
 All Mixed Up,311,55,"Rock, Alternative / Indie, Medium",90s,Male
-Amber,311,60,"Alternative / Indie, Easy",2000s,Male
+Amber,311,60,"Alternative / Indie, Medium",2000s,Male
 Down,311,65,"Rock, Rap, Hard",90s,Male
-Don't Stop,Fleetwood Mac,90,"Rock, Group Songs, Easy",70s,Mixed
-Here Without You,3 Doors Down,75,"Rock, Easy",2000s,Male
+Don't Stop,Fleetwood Mac,90,"Rock, Group Songs, Easy",70s,Female
+Here Without You,3 Doors Down,75,"Rock, Medium",2000s,Male
 Kryptonite,3 Doors Down,85,"Rock, Medium",2000s,Male
 What's Up?,4 Non Blondes,95,"Rock, Group Songs, Vocal Flex",90s,Female
 Candy Shop,50 Cent,70,"Hip-Hop, Rap, Medium",2000s,Male
@@ -14,7 +14,7 @@ Gimme! Gimme! Gimme!,ABBA,85,"Pop, Vocal Flex",70s,Female
 Lay All Your Love on Me,ABBA,75,"Pop, Medium",80s,Female
 Mamma Mia,ABBA,98,"Pop, Group Songs, Easy",70s,Female
 Super Trouper,ABBA,80,"Pop, Easy",80s,Female
-Take a Chance on Me,ABBA,90,"Pop, Group Songs, Hard",70s,Mixed
+Take a Chance on Me,ABBA,90,"Pop, Group Songs, Hard",70s,Female
 Waterloo,ABBA,88,"Pop, Group Songs, Medium",70s,Mixed
 Back in Black,AC/DC,95,"Rock, Hard Rock, Medium",80s,Male
 Thunderstruck,AC/DC,85,"Hard Rock, Vocal Flex",90s,Male
@@ -84,7 +84,7 @@ Yeah,Brooks & Dunn,85,"Country, Medium",90s,Male
 Grenade,Bruno Mars,95,"Pop, Vocal Flex",2010s,Male
 Just the Way You Are,Bruno Mars,97,"Pop, Easy",2010s,Male
 Locked Out of Heaven,Bruno Mars,95,"Pop, Rock, Medium",2010s,Male
-Treasure,Bruno Mars,9,"Pop, Group Songs, Medium",2010s,Male
+Treasure,Bruno Mars,90,"Pop, Group Songs, Medium",2010s,Male
 Call Me Maybe,Carly Rae Jepsen,98,"Pop, Group Songs, Easy",2010s,Female
 Before He Cheats,Carrie Underwood,98,"Country, Vocal Flex",2000s,Female
 Yeah 3x,Chris Brown,90,"Pop, Group Songs, Easy",2010s,Male
@@ -113,7 +113,7 @@ Come On Eileen,Dexys Midnight Runners,98,"Pop, Group Songs, Medium",80s,Male
 Drunk on a Plane,Dierks Bentley,95,"Country, Group Songs, Easy",2010s,Male
 Cha Cha Slide,DJ Casper,100,"Pop, Group Songs, Easy",2000s,Mixed
 Cake by the Ocean,DNCE,95,"Pop, Group Songs, Medium",2010s,Male
-American Pie,Don McLean,95,"Rock, Group Songs, Hard",70s,Male
+American Pie,Don McLean,95,"Rock, Medium",70s,Male
 Don't Speak,No Doubt,95,"Pop, Rock, Medium",90s,Female
 God's Plan,Drake,90,"Hip-Hop, Rap, Easy",2010s,Male
 Hotline Bling,Drake,95,"Hip-Hop, Rap, Easy",2010s,Male
@@ -179,7 +179,7 @@ The Chair,George Strait,80,"Country, Medium",80s,Male
 Write This Down,George Strait,90,"Country, Easy",90s,Male
 I Will Survive,Gloria Gaynor,100,"Pop, Group Songs, Vocal Flex",70s,Female
 Black Balloon,Goo Goo Dolls,75,"Rock, Medium",90s,Male
-Iris,Goo Goo Dolls,98,"Rock, Vocal Flex",90s,Male
+Iris,Goo Goo Dolls,98,"Rock, Medium",90s,Male
 Slide,Goo Goo Dolls,85,"Rock, Medium",90s,Male
 Lifestyles of the Rich & Famous,Good Charlotte,95,"Emo / Pop Punk, Group Songs, Easy",2000s,Male
 The Anthem,Good Charlotte,90,"Emo / Pop Punk, Medium",2000s,Male
@@ -388,9 +388,8 @@ Crazy Little Thing Called Love,Queen,95,"Rock, Easy",70s,Male
 Don't Stop Me Now,Queen,100,"Rock, Group Songs, Medium",70s,Male
 We Are the Champions,Queen,100,"Rock, Group Songs, Easy",70s,Male
 We Will Rock You,Queen,100,"Rock, Group Songs, Easy",70s,Male
-Under Pressure,Queen & David Bowie,98,"Rock, Duets, Vocal Flex",80s,Mixed
+Under Pressure,Queen & David Bowie,98,"Rock, Duets, Vocal Flex",80s,Male
 Creep,Radiohead,98,"Alternative / Indie, Medium",90s,Male
-Bless the Broken Road,Rascal Flatts,95,"Country, Easy",2000s,Male
 Bless the Broken Road,Rascal Flatts,95,"Country, Easy",2000s,Male
 Here Comes Goodbye,Rascal Flatts,85,"Country, Easy",2000s,Male
 I Melt,Rascal Flatts,80,"Country, Easy",2000s,Male
@@ -457,7 +456,7 @@ How to Save a Life,The Fray,95,"Pop, Easy",2000s,Male
 Over My Head (Cable Car),The Fray,90,"Pop, Medium",2000s,Male
 You Found Me,The Fray,92,"Pop, Medium",2000s,Male
 Human,The Killers,95,"Pop, Medium",2000s,Male
-Mr. Brightside,The Killers,100,"Alternative / Indie, Group Songs, Medium",2000s,Male
+Mr. Brightside,The Killers,100,"Alternative / Indie, Group Songs, Easy",2000s,Male
 Somebody Told Me,The Killers,95,"Alternative / Indie, Medium",2000s,Male
 When You Were Young,The Killers,95,"Rock, Medium",2000s,Male
 Ho Hey,The Lumineers,98,"Alternative / Indie, Group Songs, Easy",2010s,Male
