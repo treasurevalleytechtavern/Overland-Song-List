@@ -79,16 +79,6 @@ function getDecadeAliases(value) {
   return Array.from(aliases);
 }
 
-function getQueryTermGroups(queryTerms) {
-  return queryTerms.map((term) => [term]);
-}
-
-function songMatchesQuery(song, queryTermGroups) {
-  return queryTermGroups.every((termGroup) =>
-    termGroup.some((term) => song.fuzzyTerms.includes(term))
-  );
-}
-
 function getSearchPieces(song) {
   const decadeAliases = getDecadeAliases(song.decade);
   return [
@@ -110,33 +100,80 @@ function fieldMatchesQuery(song, fieldName, queryTerms) {
 
   const fieldText = normalize(song[fieldName]);
   const fieldTerms = tokenize(fieldText);
+  const queryPhrase = queryTerms.join(" ");
 
-  return queryTerms.length > 0 && queryTerms.every((term) =>
-    fieldTerms.includes(term) || fieldText.includes(term)
+  return queryTerms.length > 0 && (
+    fieldText === queryPhrase
+    || (queryTerms.length > 1 && fieldText.includes(queryPhrase))
+    || queryTerms.every((term) => fieldTerms.includes(term))
   );
 }
 
-function getMatchRank(song, normalizedQuery, queryTerms, preferredField = "") {
+function termMatchesText(term, text, tokens) {
+  if (!term) {
+    return false;
+  }
+
+  if (tokens.includes(term)) {
+    return true;
+  }
+
+  if (term.length < 3) {
+    return false;
+  }
+
+  return tokens.some((token) => token.startsWith(term));
+}
+
+function allTermsMatchText(queryTerms, text) {
+  const tokens = tokenize(text);
+  return queryTerms.length > 0 && queryTerms.every((term) => termMatchesText(term, text, tokens));
+}
+
+function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") {
+  const titleText = normalize(song.title);
+  const artistText = normalize(song.artist);
   const titleArtistText = normalize(`${song.title} ${song.artist}`);
+  const searchableText = song.searchText || normalize(getSearchPieces(song).join(" "));
   const yearText = normalize(song.year);
 
   if (fieldMatchesQuery(song, preferredField, queryTerms)) {
     return 0;
   }
 
-  if (normalizedQuery && titleArtistText.includes(normalizedQuery)) {
+  if (normalizedQuery && titleText === normalizedQuery) {
     return 1;
   }
 
-  if (queryTerms.length && queryTerms.every((term) => tokenize(titleArtistText).includes(term))) {
-    return 1;
-  }
-
-  if (yearText && queryTerms.includes(yearText)) {
+  if (normalizedQuery && artistText === normalizedQuery) {
     return 2;
   }
 
-  return 3;
+  if (normalizedQuery && titleText.includes(normalizedQuery)) {
+    return 3;
+  }
+
+  if (normalizedQuery && artistText.includes(normalizedQuery)) {
+    return 4;
+  }
+
+  if (allTermsMatchText(queryTerms, titleArtistText)) {
+    return 5;
+  }
+
+  if (yearText && queryTerms.includes(yearText)) {
+    return 6;
+  }
+
+  if (normalizedQuery && searchableText.includes(normalizedQuery)) {
+    return 7;
+  }
+
+  if (allTermsMatchText(queryTerms, searchableText)) {
+    return 8;
+  }
+
+  return null;
 }
 
 function parsePopularity(value) {
@@ -604,14 +641,13 @@ function render() {
   }
 
   const queryTerms = tokenize(query);
-  const queryTermGroups = getQueryTermGroups(queryTerms);
   const rankedMatches = [];
   let matchCount = 0;
 
   for (const song of songs) {
-    const isMatch = songMatchesQuery(song, queryTermGroups);
+    const score = getSearchScore(song, normalizedQuery, queryTerms, activeSearchField);
 
-    if (!isMatch) {
+    if (score === null) {
       continue;
     }
 
@@ -619,7 +655,7 @@ function render() {
 
     rankedMatches.push({
       song,
-      rank: getMatchRank(song, normalizedQuery, queryTerms, activeSearchField)
+      rank: score
     });
   }
 
@@ -646,7 +682,7 @@ function render() {
       .slice(0, fuzzyResultLimit)
       .forEach((match) => rankedMatches.push({
         song: match.song,
-        rank: getMatchRank(match.song, normalizedQuery, queryTerms, activeSearchField)
+        rank: getSearchScore(match.song, normalizedQuery, queryTerms, activeSearchField) ?? 9
       }));
 
     matchCount = rankedMatches.length;
