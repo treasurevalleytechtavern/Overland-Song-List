@@ -156,8 +156,10 @@ function hydrateIndexedSongs(indexPayload) {
       const searchPieces = getSearchPieces({ title, artist, categories, decade, originalVocal });
       const searchText = String(row[5] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
+        ? compactFieldSource
         : [normalize(title).replace(/\s/g, ""), normalize(artist).replace(/\s/g, ""), normalize(categories).replace(/\s/g, ""), normalize(decade).replace(/\s/g, ""), normalize(originalVocal).replace(/\s/g, "")].filter(Boolean);
       const fuzzyTerms = fuzzyTermSource
+        ? fuzzyTermSource
         : Array.from(new Set(tokenize(searchPieces.join(" "))));
 
       return {
@@ -342,12 +344,7 @@ function renderPopularSongs() {
     return;
   }
 
-  popularBody.innerHTML = popularSongs.map((song) => `
-    <tr>
-      <td data-label="Title">${escapeHtml(song.title)}</td>
-      <td data-label="Artist">${escapeHtml(song.artist)}</td>
-    </tr>
-  `).join("");
+  popularBody.innerHTML = renderSongRows(popularSongs);
 
   popularEmptyState.hidden = popularSongs.length !== 0;
 }
@@ -606,6 +603,9 @@ async function loadInitialSongs() {
     setSongs(parseCsv(await response.text()));
   } catch {
     songs = [];
+    if (resultsSection) {
+      resultsSection.hidden = false;
+    }
     resultsBody.innerHTML = "";
     emptyState.textContent = "Song list unavailable. Check songs.csv.";
     emptyState.hidden = false;
@@ -623,7 +623,7 @@ browseButtons.forEach((button) => {
     searchInput.value = button.dataset.search || "";
     window.clearTimeout(searchTimer);
     render();
-    searchInput.focus({ preventScroll: true });
+    searchInput.focus();
   });
 });
 
