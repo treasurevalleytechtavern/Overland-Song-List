@@ -20,6 +20,7 @@ const popularEmptyState = document.querySelector("#popular-empty-state");
 let songs = [];
 let popularSongs = [];
 let searchTimer = 0;
+let requestNavigationStarted = false;
 
 function normalize(value) {
   return String(value || "")
@@ -55,6 +56,34 @@ function getDecadeAliases(value) {
   }
 
   return Array.from(aliases);
+}
+
+function getYearAliases(term) {
+  const year = Number(term);
+
+  if (!/^\d{4}$/.test(term) || year < 1900 || year > 2099) {
+    return [];
+  }
+
+  const decadeStart = Math.floor(year / 10) * 10;
+  const shortDecade = `${String(decadeStart).slice(2)}s`;
+  const longDecade = `${decadeStart}s`;
+
+  return [shortDecade, longDecade];
+}
+
+function expandQueryTerms(queryTerms) {
+  return Array.from(new Set(queryTerms.flatMap((term) => [term, ...getYearAliases(term)])));
+}
+
+function getQueryTermGroups(queryTerms) {
+  return queryTerms.map((term) => Array.from(new Set([term, ...getYearAliases(term)])));
+}
+
+function songMatchesQuery(song, queryTermGroups) {
+  return queryTermGroups.every((termGroup) =>
+    termGroup.some((term) => song.fuzzyTerms.includes(term))
+  );
 }
 
 function getSearchPieces(song) {
@@ -294,6 +323,30 @@ function renderRequestSong(query) {
   resultCount.textContent = "0 songs";
 }
 
+function openRequestSong(url) {
+  try {
+    window.top.location.assign(url);
+  } catch {
+    window.location.assign(url);
+  }
+}
+
+function handleRequestSongActivation(event) {
+  const requestLink = event.target.closest(".request-song-button");
+
+  if (!requestLink || requestNavigationStarted) {
+    return;
+  }
+
+  requestNavigationStarted = true;
+  event.preventDefault();
+  openRequestSong(requestLink.href);
+
+  window.setTimeout(() => {
+    requestNavigationStarted = false;
+  }, 2000);
+}
+
 function hideSearchResults() {
   if (resultsSection) {
     resultsSection.hidden = true;
@@ -433,13 +486,13 @@ function render() {
   }
 
   const queryTerms = tokenize(query);
+  const expandedQueryTerms = expandQueryTerms(queryTerms);
+  const queryTermGroups = getQueryTermGroups(queryTerms);
   let matches = [];
   let matchCount = 0;
 
   for (const song of songs) {
-    const isMatch = queryTerms.length === 1
-      ? song.fuzzyTerms.includes(queryTerms[0])
-      : song.searchText.includes(normalizedQuery);
+    const isMatch = songMatchesQuery(song, queryTermGroups);
 
     if (!isMatch) {
       continue;
@@ -463,7 +516,7 @@ function render() {
         continue;
       }
 
-      const rank = fuzzyRank(song, queryTerms);
+      const rank = fuzzyRank(song, expandedQueryTerms);
 
       if (rank !== null) {
         fuzzyMatches.push({ song, rank });
@@ -489,7 +542,7 @@ function render() {
   }
 
   resultsBody.innerHTML = renderSongRows(matches, query);
-  renderSimilarSongs(matchCount > 0 && matchCount < 5 ? matches : [], query, queryTerms);
+  renderSimilarSongs(matchCount > 0 && matchCount < 5 ? matches : [], query, expandedQueryTerms);
 
   emptyState.hidden = true;
   const shownText = matchCount > maxRenderedRows ? `, showing first ${maxRenderedRows}` : "";
@@ -628,12 +681,14 @@ browseButtons.forEach((button) => {
 });
 
 searchInput.addEventListener("search", render);
-searchInput.addEventListener("change", render);
 searchInput.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
     render();
   }
 });
+
+emptyState.addEventListener("pointerdown", handleRequestSongActivation);
+emptyState.addEventListener("click", handleRequestSongActivation);
 
 if (searchForm) {
   searchForm.addEventListener("submit", (event) => {
