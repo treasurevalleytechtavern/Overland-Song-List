@@ -819,7 +819,7 @@ mark {
 @media (max-width: 760px) {
   body {
     --header-height: 96px;
-    --bottom-bar-height: 164px;
+    --bottom-bar-height: 96px;
   }
 
   .site-header {
@@ -945,23 +945,24 @@ mark {
   }
 
   .site-credit-footer {
-    gap: 8px;
-    padding: 12px 14px 14px;
+    gap: 4px;
+    padding: 8px 12px 18px;
   }
 
   .footer-report-link {
-    position: static;
-    justify-self: center;
+    position: absolute;
+    right: 12px;
+    bottom: 5px;
   }
 
   .catalogue-note {
-    font-size: 0.78rem;
-    line-height: 1.35;
+    font-size: 0.68rem;
+    line-height: 1.22;
   }
 
   .powered-by,
   .footer-report-link {
-    font-size: 0.7rem;
+    font-size: 0.63rem;
   }
 
 }
