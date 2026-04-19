@@ -2,8 +2,8 @@ const maxRenderedRows = 15;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260419-duet-filter";
-const songCsvUrl = "songs.csv?v=20260419-duet-filter";
+const songIndexUrl = "songs.index.json?v=20260419-8430";
+const songCsvUrl = "songs.csv?v=20260419-8430";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -95,11 +95,36 @@ function getDecadeAliases(value) {
   return Array.from(aliases);
 }
 
+function getArtistAliases(artist) {
+  const normalizedArtist = normalize(artist);
+  const aliases = new Set();
+
+  if (normalizedArtist.includes("the chicks")) {
+    aliases.add("Dixie Chicks");
+  }
+
+  if (normalizedArtist.includes("dixie chicks")) {
+    aliases.add("The Chicks");
+  }
+
+  if (normalizedArtist === "lady a" || normalizedArtist.startsWith("lady a ") || normalizedArtist.includes(" lady a ")) {
+    aliases.add("Lady Antebellum");
+  }
+
+  if (normalizedArtist.includes("lady antebellum") || normalizedArtist.includes("lady antebullum")) {
+    aliases.add("Lady A");
+  }
+
+  return Array.from(aliases);
+}
+
 function getSearchPieces(song) {
   const decadeAliases = getDecadeAliases(song.decade);
+  const artistAliases = getArtistAliases(song.artist);
   return [
     song.title,
     song.artist,
+    ...artistAliases,
     song.categories,
     song.socialSinging,
     song.decade,
@@ -241,7 +266,9 @@ function getRankingScore(song) {
 function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") {
   const titleText = normalize(song.title);
   const artistText = normalize(song.artist);
-  const titleArtistText = normalize(`${song.title} ${song.artist}`);
+  const artistAliasTexts = getArtistAliases(song.artist).map(normalize);
+  const artistSearchText = normalize([song.artist, ...getArtistAliases(song.artist)].join(" "));
+  const titleArtistText = normalize(`${song.title} ${song.artist} ${getArtistAliases(song.artist).join(" ")}`);
   const searchableText = song.searchText || normalize(getSearchPieces(song).join(" "));
   const yearText = normalize(song.year);
 
@@ -257,11 +284,19 @@ function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") 
     return 2;
   }
 
+  if (normalizedQuery && artistAliasTexts.includes(normalizedQuery)) {
+    return 2;
+  }
+
   if (normalizedQuery && titleText.includes(normalizedQuery)) {
     return 3;
   }
 
   if (normalizedQuery && artistText.includes(normalizedQuery)) {
+    return 4;
+  }
+
+  if (normalizedQuery && artistSearchText.includes(normalizedQuery)) {
     return 4;
   }
 
@@ -301,6 +336,7 @@ function indexSongs(nextSongs) {
       const compactFields = [
         normalize(title).replace(/\s/g, ""),
         normalize(artist).replace(/\s/g, ""),
+        ...getArtistAliases(artist).map((alias) => normalize(alias).replace(/\s/g, "")),
         normalize(categories).replace(/\s/g, ""),
         normalize(socialSinging).replace(/\s/g, ""),
         normalize(decade).replace(/\s/g, ""),

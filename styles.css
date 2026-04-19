@@ -38,7 +38,7 @@ body {
   justify-content: space-between;
   gap: 18px;
   min-height: var(--header-height);
-  padding: 10px max(18px, calc((100vw - 1120px) / 2));
+  padding: 8px max(18px, calc((100vw - 1120px) / 2));
   border-bottom: 1px solid rgba(48, 48, 48, 0.78);
   background: rgba(5, 5, 5, 0.96);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
@@ -54,8 +54,8 @@ body {
 
 .site-logo {
   display: block;
-  width: min(180px, 42vw);
-  max-height: 54px;
+  width: min(240px, 44vw);
+  max-height: 62px;
   object-fit: contain;
   filter:
     drop-shadow(0 0 8px rgba(49, 232, 255, 0.38))
@@ -776,35 +776,35 @@ mark {
 
 @media (min-width: 761px) {
   body:not(.is-scrolled) {
-    --header-height: 196px;
+    --header-height: 118px;
   }
 
   body:not(.is-scrolled) .site-logo {
-    width: 172px;
-    max-height: 172px;
+    width: min(360px, 38vw);
+    max-height: 86px;
   }
 
   body.is-scrolled {
-    --header-height: 74px;
+    --header-height: 68px;
   }
 }
 
 @media (max-width: 760px) {
   body {
-    --header-height: 116px;
+    --header-height: 112px;
   }
 
   .site-header {
     align-items: center;
     flex-direction: column;
-    gap: 10px;
-    padding-top: 9px;
-    padding-bottom: 10px;
+    gap: 7px;
+    padding-top: 7px;
+    padding-bottom: 8px;
   }
 
   .site-logo {
-    width: min(150px, 62vw);
-    max-height: 42px;
+    width: min(190px, 68vw);
+    max-height: 46px;
   }
 
   .site-nav {

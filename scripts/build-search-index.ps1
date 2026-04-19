@@ -80,6 +80,31 @@ function Get-DecadeAliases {
   return $aliases | Sort-Object -Unique
 }
 
+function Get-ArtistAliases {
+  param([AllowNull()][string]$Artist)
+
+  $normalizedArtist = Normalize-SearchText $Artist
+  $aliases = New-Object System.Collections.Generic.List[string]
+
+  if ($normalizedArtist.Contains("the chicks")) {
+    $aliases.Add("Dixie Chicks")
+  }
+
+  if ($normalizedArtist.Contains("dixie chicks")) {
+    $aliases.Add("The Chicks")
+  }
+
+  if ($normalizedArtist -eq "lady a" -or $normalizedArtist.StartsWith("lady a ") -or $normalizedArtist.Contains(" lady a ")) {
+    $aliases.Add("Lady Antebellum")
+  }
+
+  if ($normalizedArtist.Contains("lady antebellum") -or $normalizedArtist.Contains("lady antebullum")) {
+    $aliases.Add("Lady A")
+  }
+
+  return $aliases | Sort-Object -Unique
+}
+
 $resolvedCsvPath = Resolve-Path -LiteralPath $CsvPath
 $rows = Import-Csv -LiteralPath $resolvedCsvPath
 $indexedRows = New-Object System.Collections.Generic.List[object]
@@ -99,19 +124,21 @@ foreach ($row in $rows) {
   }
 
   $decadeAliases = Get-DecadeAliases $decade
-  $searchText = Normalize-SearchText "$title $artist $categories $socialSinging $decade $($decadeAliases -join ' ') $year $originalVocal"
+  $artistAliases = Get-ArtistAliases $artist
+  $searchText = Normalize-SearchText "$title $artist $($artistAliases -join ' ') $categories $socialSinging $decade $($decadeAliases -join ' ') $year $originalVocal"
   $titleStarts = Normalize-SearchText $title
   $artistStarts = Normalize-SearchText $artist
   $compactFieldsList = New-Object System.Collections.Generic.List[string]
   $compactTitle = $titleStarts -replace "\s", ""
   $compactArtist = $artistStarts -replace "\s", ""
+  $compactArtistAliases = $artistAliases | ForEach-Object { (Normalize-SearchText $_) -replace "\s", "" }
   $compactCategories = (Normalize-SearchText $categories) -replace "\s", ""
   $compactSocialSinging = (Normalize-SearchText $socialSinging) -replace "\s", ""
   $compactDecade = (Normalize-SearchText $decade) -replace "\s", ""
   $compactYear = (Normalize-SearchText $year) -replace "\s", ""
   $compactOriginalVocal = (Normalize-SearchText $originalVocal) -replace "\s", ""
 
-  foreach ($compactField in @($compactTitle, $compactArtist, $compactCategories, $compactSocialSinging, $compactDecade, $compactYear, $compactOriginalVocal)) {
+  foreach ($compactField in @($compactTitle, $compactArtist) + $compactArtistAliases + @($compactCategories, $compactSocialSinging, $compactDecade, $compactYear, $compactOriginalVocal)) {
     if (-not [string]::IsNullOrWhiteSpace($compactField)) {
       $compactFieldsList.Add($compactField)
     }
