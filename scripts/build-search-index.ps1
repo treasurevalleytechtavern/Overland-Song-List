@@ -80,6 +80,25 @@ function Get-DecadeAliases {
   return $aliases | Sort-Object -Unique
 }
 
+function Get-DecadeFromYear {
+  param([AllowNull()][string]$Value)
+
+  $yearMatch = [Text.RegularExpressions.Regex]::Match([string]$Value, "\b(19\d{2}|20\d{2})\b")
+
+  if (-not $yearMatch.Success) {
+    return ""
+  }
+
+  $year = [int]$yearMatch.Groups[1].Value
+  $decadeStart = [math]::Floor($year / 10) * 10
+
+  if ($decadeStart -ge 2000) {
+    return "$($decadeStart)s"
+  }
+
+  return "$(([string]$decadeStart).Substring(2))s"
+}
+
 function Get-ArtistAliases {
   param([AllowNull()][string]$Artist)
 
@@ -118,6 +137,10 @@ foreach ($row in $rows) {
   $year = Get-Field $row @("year")
   $originalVocal = Get-Field $row @("original_vocal")
   $rankingScore = Get-Field $row @("popularity score", "popularity")
+
+  if ([string]::IsNullOrWhiteSpace($decade)) {
+    $decade = Get-DecadeFromYear $year
+  }
 
   if ([string]::IsNullOrWhiteSpace($title) -and [string]::IsNullOrWhiteSpace($artist)) {
     continue

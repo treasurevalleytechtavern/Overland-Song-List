@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  --header-height: 74px;
+  --header-height: 58px;
   --black: #050505;
   --charcoal: #121212;
   --panel: #181818;
@@ -38,7 +38,7 @@ body {
   justify-content: space-between;
   gap: 18px;
   min-height: var(--header-height);
-  padding: 8px max(18px, calc((100vw - 1120px) / 2));
+  padding: 3px max(18px, calc((100vw - 1120px) / 2));
   border-bottom: 1px solid rgba(48, 48, 48, 0.78);
   background: rgba(5, 5, 5, 0.96);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
@@ -54,8 +54,8 @@ body {
 
 .site-logo {
   display: block;
-  width: min(240px, 44vw);
-  max-height: 62px;
+  width: min(220px, 42vw);
+  max-height: 52px;
   object-fit: contain;
   filter:
     drop-shadow(0 0 8px rgba(49, 232, 255, 0.38))
@@ -775,36 +775,27 @@ mark {
 }
 
 @media (min-width: 761px) {
-  body:not(.is-scrolled) {
-    --header-height: 118px;
-  }
-
-  body:not(.is-scrolled) .site-logo {
-    width: min(360px, 38vw);
-    max-height: 86px;
-  }
-
-  body.is-scrolled {
-    --header-height: 68px;
+  body {
+    --header-height: 58px;
   }
 }
 
 @media (max-width: 760px) {
   body {
-    --header-height: 112px;
+    --header-height: 96px;
   }
 
   .site-header {
     align-items: center;
     flex-direction: column;
-    gap: 7px;
-    padding-top: 7px;
-    padding-bottom: 8px;
+    gap: 5px;
+    padding-top: 4px;
+    padding-bottom: 5px;
   }
 
   .site-logo {
-    width: min(190px, 68vw);
-    max-height: 46px;
+    width: min(180px, 68vw);
+    max-height: 42px;
   }
 
   .site-nav {

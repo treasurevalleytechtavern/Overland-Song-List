@@ -2,8 +2,8 @@ const maxRenderedRows = 15;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260419-8430";
-const songCsvUrl = "songs.csv?v=20260419-8430";
+const songIndexUrl = "songs.index.json?v=20260419-derived-decades";
+const songCsvUrl = "songs.csv?v=20260419-derived-decades";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -93,6 +93,19 @@ function getDecadeAliases(value) {
   }
 
   return Array.from(aliases);
+}
+
+function deriveDecadeFromYear(value) {
+  const yearMatch = String(value || "").match(/\b(19\d{2}|20\d{2})\b/);
+
+  if (!yearMatch) {
+    return "";
+  }
+
+  const year = Number(yearMatch[1]);
+  const decadeStart = Math.floor(year / 10) * 10;
+
+  return decadeStart >= 2000 ? `${decadeStart}s` : `${String(decadeStart).slice(2)}s`;
 }
 
 function getArtistAliases(artist) {
@@ -327,9 +340,9 @@ function indexSongs(nextSongs) {
       const artist = String(song.artist || "").trim();
       const categories = String(song.categories || "").trim();
       const socialSinging = String(song.socialSinging || "").trim();
-      const decade = String(song.decade || "").trim();
       const originalVocal = String(song.originalVocal || "").trim();
       const year = String(song.year || "").trim();
+      const decade = String(song.decade || "").trim() || deriveDecadeFromYear(year);
       const rankingScore = parseRankingScore(song.rankingScore);
       const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
       const searchText = normalize(searchPieces.join(" "));
@@ -385,9 +398,9 @@ function hydrateIndexedSongs(indexPayload) {
       const title = String(row[0] || "").trim();
       const artist = String(row[1] || "").trim();
       const categories = String(row[2] || "").trim();
-      const decade = String(row[8] || "").trim();
       const originalVocal = String(row[9] || "").trim();
       const year = String(row[10] || "").trim();
+      const decade = String(row[8] || "").trim() || deriveDecadeFromYear(year);
       const socialSinging = String(row[11] || "").trim();
       const rankingScore = parseRankingScore(row[12]);
       const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });

@@ -85,6 +85,8 @@ songs.index.json
 
 The JSON index precomputes normalized search fields, typo-match terms, and category search data so visitors do not have to build all of that in their browser.
 
+If `decade` is blank but `year` has a four-digit value, the index build derives the searchable decade from the year without changing `songs.csv`.
+
 ## GoDaddy Embed
 
 After GitHub Pages is live, paste only this into GoDaddy's HTML section:
@@ -122,7 +124,7 @@ Current browse groups:
 
 ```text
 Original vocal: Male, Female, Mixed
-Genre: Pop, Rock, Country, Hip-Hop, Rap, R&B, Soul, Alternative / Indie, Emo / Pop Punk, Metal / Hard Rock
+Genre: Pop, Rock, Country, Hip-Hop / Rap, R&B, Soul, Alternative / Indie, Emo / Pop Punk, Metal / Hard Rock, Folk
 Decade: 70s, 80s, 90s, 2000s, 2010s
 Social singing: Duet, Group Songs
 ```
