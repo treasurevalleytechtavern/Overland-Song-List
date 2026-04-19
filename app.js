@@ -1,9 +1,9 @@
-const maxRenderedRows = 100;
+const maxRenderedRows = 15;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260419-social-vocals";
-const songCsvUrl = "songs.csv?v=20260419-social-vocals";
+const songIndexUrl = "songs.index.json?v=20260419-duet-filter";
+const songCsvUrl = "songs.csv?v=20260419-duet-filter";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
@@ -32,6 +32,7 @@ let activeFilters = [];
 let currentSearchMatches = [];
 let currentSearchQuery = "";
 let visibleResultCount = maxRenderedRows;
+let currentUsedTypoMatching = false;
 
 const diceButtons = [topDiceButton, diceButton].filter(Boolean);
 diceButtons.forEach((button) => {
@@ -116,11 +117,14 @@ function fieldMatchesQuery(song, fieldName, queryTerms) {
   const fieldText = normalize(song[fieldName]);
   const fieldTerms = tokenize(fieldText);
   const queryPhrase = queryTerms.join(" ");
+  const singularFieldTerms = fieldTerms.map((term) => term.endsWith("s") ? term.slice(0, -1) : term);
+  const singularQueryTerms = queryTerms.map((term) => term.endsWith("s") ? term.slice(0, -1) : term);
 
   return queryTerms.length > 0 && (
     fieldText === queryPhrase
     || (queryTerms.length > 1 && fieldText.includes(queryPhrase))
     || queryTerms.every((term) => fieldTerms.includes(term))
+    || singularQueryTerms.every((term) => singularFieldTerms.includes(term))
   );
 }
 
@@ -170,6 +174,17 @@ function setFilterFromButton(button) {
 
   if (!field || !value) {
     return;
+  }
+
+  const isDuetFilter = field === "socialSinging" && normalize(value).replace(/\s/g, "") === "duets";
+  const isOriginalVocalFilter = field === "originalVocal";
+
+  if (isDuetFilter) {
+    activeFilters = activeFilters.filter((filter) => filter.field !== "originalVocal");
+  } else if (isOriginalVocalFilter) {
+    activeFilters = activeFilters.filter((filter) =>
+      !(filter.field === "socialSinging" && normalize(filter.value).replace(/\s/g, "") === "duets")
+    );
   }
 
   const existingIndex = activeFilters.findIndex((filter) => filter.field === field);
@@ -617,7 +632,11 @@ function renderSongRows(songList, query = "") {
 }
 
 function renderVisibleSearchResults(matchCount, usedTypoMatching) {
+  currentUsedTypoMatching = usedTypoMatching;
   const visibleMatches = currentSearchMatches.slice(0, visibleResultCount);
+  const visibleCount = visibleMatches.length;
+  const totalPages = Math.max(1, Math.ceil(currentSearchMatches.length / maxRenderedRows));
+  const currentPage = Math.max(1, Math.ceil(visibleCount / maxRenderedRows));
 
   resultsBody.innerHTML = renderSongRows(visibleMatches, currentSearchQuery);
 
@@ -627,7 +646,7 @@ function renderVisibleSearchResults(matchCount, usedTypoMatching) {
   }
 
   emptyState.hidden = true;
-  const shownText = currentSearchMatches.length > visibleMatches.length ? `, showing first ${visibleMatches.length.toLocaleString()}` : "";
+  const shownText = `, showing 1-${visibleCount.toLocaleString()} of ${currentSearchMatches.length.toLocaleString()}, page ${currentPage.toLocaleString()} of ${totalPages.toLocaleString()}`;
   const typoText = usedTypoMatching ? " including close matches" : "";
   resultCount.textContent = `${matchCount.toLocaleString()} song${matchCount === 1 ? "" : "s"}${typoText}${shownText}`;
 }
@@ -984,7 +1003,7 @@ clearButton.addEventListener("click", () => {
 if (loadMoreButton) {
   loadMoreButton.addEventListener("click", () => {
     visibleResultCount += maxRenderedRows;
-    renderVisibleSearchResults(currentSearchMatches.length, false);
+    renderVisibleSearchResults(currentSearchMatches.length, currentUsedTypoMatching);
   });
 }
 
