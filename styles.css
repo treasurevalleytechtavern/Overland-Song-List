@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark;
   --header-height: 58px;
+  --bottom-bar-height: 104px;
   --black: #050505;
   --charcoal: #121212;
   --panel: #181818;
@@ -24,6 +25,7 @@
 body {
   margin: 0;
   min-width: 320px;
+  padding-bottom: var(--bottom-bar-height);
   background: var(--black);
   color: var(--white);
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -127,22 +129,55 @@ form {
 }
 
 .site-credit-footer {
-  display: flex;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 35;
+  display: grid;
+  grid-template-areas:
+    "catalogue"
+    "powered";
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  min-height: 58px;
-  padding: 14px max(18px, calc((100vw - 1120px) / 2));
-  border-top: 1px solid var(--line);
-  background: #050505;
+  align-content: center;
+  justify-items: center;
+  gap: 6px;
+  min-height: var(--bottom-bar-height);
+  padding: 12px max(18px, calc((100vw - 1120px) / 2)) 14px;
+  border-top: 1px solid rgba(255, 209, 42, 0.28);
+  background:
+    linear-gradient(90deg, rgba(49, 232, 255, 0.1), rgba(255, 70, 98, 0.06), rgba(255, 209, 42, 0.1)),
+    rgba(5, 5, 5, 0.97);
   color: var(--muted);
   font-size: 0.82rem;
-  position: relative;
   text-align: center;
+  box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
 }
 
 .site-credit-footer p {
   margin: 0;
+}
+
+.catalogue-note {
+  grid-area: catalogue;
+  max-width: 960px;
+  justify-self: center;
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-shadow:
+    0 0 10px rgba(255, 209, 42, 0.3),
+    0 0 16px rgba(49, 232, 255, 0.16);
+}
+
+.powered-by {
+  grid-area: powered;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
 }
 
 .site-credit-footer a {
@@ -159,6 +194,7 @@ form {
 .footer-report-link {
   position: absolute;
   right: max(18px, calc((100vw - 1120px) / 2));
+  bottom: 13px;
   color: var(--muted) !important;
   font-size: 0.74rem;
   text-decoration-color: rgba(185, 185, 185, 0.48) !important;
@@ -783,6 +819,7 @@ mark {
 @media (max-width: 760px) {
   body {
     --header-height: 96px;
+    --bottom-bar-height: 164px;
   }
 
   .site-header {
@@ -908,14 +945,23 @@ mark {
   }
 
   .site-credit-footer {
-    align-items: center;
-    flex-direction: column;
-    gap: 7px;
-    padding-bottom: 18px;
+    gap: 8px;
+    padding: 12px 14px 14px;
   }
 
   .footer-report-link {
     position: static;
+    justify-self: center;
+  }
+
+  .catalogue-note {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .powered-by,
+  .footer-report-link {
+    font-size: 0.7rem;
   }
 
 }
