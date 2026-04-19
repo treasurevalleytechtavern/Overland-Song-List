@@ -26,12 +26,21 @@ function Get-Field {
     if ($Row.PSObject.Properties.Name -contains $name) {
       return [string]$Row.$name
     }
+
+    $normalizedName = Normalize-SearchText $name
+    $matchingProperty = $Row.PSObject.Properties | Where-Object {
+      (Normalize-SearchText $_.Name) -eq $normalizedName
+    } | Select-Object -First 1
+
+    if ($null -ne $matchingProperty) {
+      return [string]$matchingProperty.Value
+    }
   }
 
   return ""
 }
 
-function Get-PopularityScore {
+function Get-RankingScore {
   param([AllowNull()][string]$Value)
 
   $raw = if ($null -eq $Value) { "" } else { [string]$Value }
@@ -78,29 +87,31 @@ $indexedRows = New-Object System.Collections.Generic.List[object]
 foreach ($row in $rows) {
   $title = Get-Field $row @("title")
   $artist = Get-Field $row @("artist")
-  $categories = Get-Field $row @("categories", "category")
-  $decade = Get-Field $row @("decade", "decades")
-  $year = Get-Field $row @("year", "release year", "release_year", "released")
-  $originalVocal = Get-Field $row @("original vocal", "original_vocal", "vocal", "vocals", "voice")
-  $popularity = Get-Field $row @("popularity score", "popularity_score", "popularity", "score")
+  $categories = Get-Field $row @("categories")
+  $socialSinging = Get-Field $row @("social_singing")
+  $decade = Get-Field $row @("decade")
+  $year = Get-Field $row @("year")
+  $originalVocal = Get-Field $row @("original_vocal")
+  $rankingScore = Get-Field $row @("popularity score", "popularity")
 
   if ([string]::IsNullOrWhiteSpace($title) -and [string]::IsNullOrWhiteSpace($artist)) {
     continue
   }
 
   $decadeAliases = Get-DecadeAliases $decade
-  $searchText = Normalize-SearchText "$title $artist $categories $decade $($decadeAliases -join ' ') $year $originalVocal"
+  $searchText = Normalize-SearchText "$title $artist $categories $socialSinging $decade $($decadeAliases -join ' ') $year $originalVocal"
   $titleStarts = Normalize-SearchText $title
   $artistStarts = Normalize-SearchText $artist
   $compactFieldsList = New-Object System.Collections.Generic.List[string]
   $compactTitle = $titleStarts -replace "\s", ""
   $compactArtist = $artistStarts -replace "\s", ""
   $compactCategories = (Normalize-SearchText $categories) -replace "\s", ""
+  $compactSocialSinging = (Normalize-SearchText $socialSinging) -replace "\s", ""
   $compactDecade = (Normalize-SearchText $decade) -replace "\s", ""
   $compactYear = (Normalize-SearchText $year) -replace "\s", ""
   $compactOriginalVocal = (Normalize-SearchText $originalVocal) -replace "\s", ""
 
-  foreach ($compactField in @($compactTitle, $compactArtist, $compactCategories, $compactDecade, $compactYear, $compactOriginalVocal)) {
+  foreach ($compactField in @($compactTitle, $compactArtist, $compactCategories, $compactSocialSinging, $compactDecade, $compactYear, $compactOriginalVocal)) {
     if (-not [string]::IsNullOrWhiteSpace($compactField)) {
       $compactFieldsList.Add($compactField)
     }
@@ -117,8 +128,6 @@ foreach ($row in $rows) {
     $title.Trim(),
     $artist.Trim(),
     $categories.Trim(),
-    $popularity.Trim(),
-    (Get-PopularityScore $popularity),
     $searchText,
     [object[]]$compactFieldsList.ToArray(),
     [object[]]$fuzzyTermsList.ToArray(),
@@ -126,7 +135,9 @@ foreach ($row in $rows) {
     $artistStarts,
     $decade.Trim(),
     $originalVocal.Trim(),
-    $year.Trim()
+    $year.Trim(),
+    $socialSinging.Trim(),
+    (Get-RankingScore $rankingScore)
   ))
 }
 

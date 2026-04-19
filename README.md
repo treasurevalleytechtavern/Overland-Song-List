@@ -2,10 +2,6 @@
 
 A static, no-login karaoke song search page for title, artist, categories, social singing, decade, year, and original vocal. Visitors can search the published song list only; there is no public upload control.
 
-## Public Search Instructions
-
-These instructions are only for the clean, visitor-facing song search.
-
 ## Update The Public Song List
 
 Edit the public `songs.csv` with these exact headers:
@@ -16,31 +12,11 @@ Friends in Low Places,Garth Brooks,1990,1990s,Male,Country,Group Songs
 Jolene,Dolly Parton,1973,1970s,Female,Country,
 ```
 
+Optional hidden ranking column: `popularity` or `popularity score`. Use a number from 1 to 1000. Higher numbers break ties after normal search/filter relevance.
+
 If a categories value contains commas, wrap that field in quotes.
 
-Do not put raw karaoke machine exports here. Only use this file after the songs have already been cleaned and reviewed.
-
-When the cleaned list is ready, copy the approved rows into the public `songs.csv` file used by the site, then rebuild the search index. `data/songs.csv` is only a fallback copy for the app and should also contain reviewed, clean rows if you use it.
-
-## Raw CSV Cleanup Instructions
-
-Raw karaoke machine exports belong in:
-
-```text
-tools/karaoke-cleaner/upload-csv/
-```
-
-That upload CSV is separate from the public `songs.csv` used by the search page. The cleaner writes its generated files to:
-
-```text
-tools/karaoke-cleaner/output/
-```
-
-Full cleanup instructions live here:
-
-```text
-tools/karaoke-cleaner/README.md
-```
+Update the public `songs.csv` file used by the site, then rebuild the search index. `data/songs.csv` is only a fallback copy for the app and should use the same public CSV structure if you keep it.
 
 ## Embed It
 
@@ -52,6 +28,7 @@ Put these files in the GitHub repo:
 
 ```text
 index.html
+report-song-issue.html
 styles.css
 app.js
 songs.csv
@@ -135,11 +112,11 @@ var songCsvUrl = "https://raw.githubusercontent.com/treasurevalleytechtavern/Ove
 
 The CSV should be on the same website/domain when possible. Some file hosts block browser fetches from embedded code.
 
-For large lists, the search waits until someone types at least 2 characters and renders only the first 300 matches. The dice button can show 5 randomized Female original-vocal suggestions and 5 randomized Male original-vocal suggestions when someone wants quick ideas.
+For large lists, the search waits until someone types at least 2 characters and renders only the first 100 matches. The dice button can show 5 randomized Female original-vocal suggestions and 5 randomized Male original-vocal suggestions when someone wants quick ideas.
 
 Available Songs uses strict matches first. If there are 1 to 4 strict matches, a Similar Songs section appears underneath. Similar Songs uses the same artist when the search looks like a song title, and shared categories when the search looks like an artist/category/decade/year search. Typo matching is only used when there are zero strict matches.
 
-The browse buttons are lightweight shortcuts. They fill the main search field with terms like `80s`, `Female`, `Group Song`, or `Country`, then run the same search logic. `categories`, `social_singing`, `decade`, `original vocal`, and `year` are indexed for search but are not shown as visible columns.
+The browse buttons are lightweight stacked filters. They can combine terms like `Genre: Rock; Decade: 70s; Original vocal: Female`, then run the same search logic. `categories`, `social_singing`, `decade`, `original vocal`, and `year` are indexed for search but are not shown as visible columns.
 
 Current browse groups:
 
@@ -147,7 +124,6 @@ Current browse groups:
 Original vocal: Male, Female, Mixed
 Genre: Pop, Rock, Country, Hip-Hop, Rap, R&B, Soul, Alternative / Indie, Emo / Pop Punk, Metal / Hard Rock
 Decade: 70s, 80s, 90s, 2000s, 2010s
-Vocal challenge: Easy, Medium, Hard, Vocal Flex
 Social singing: Duet, Group Songs
 ```
 
