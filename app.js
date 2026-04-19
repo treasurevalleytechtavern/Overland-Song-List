@@ -38,6 +38,13 @@ diceButtons.forEach((button) => {
   button.disabled = true;
 });
 
+function updateHeaderScrollState() {
+  document.body.classList.toggle("is-scrolled", window.scrollY > 4);
+}
+
+window.addEventListener("scroll", updateHeaderScrollState, { passive: true });
+updateHeaderScrollState();
+
 const filterFieldLabels = {
   categories: "Genre",
   decade: "Decade",

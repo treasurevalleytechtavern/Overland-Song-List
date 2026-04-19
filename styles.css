@@ -1,5 +1,6 @@
 :root {
   color-scheme: dark;
+  --header-height: 74px;
   --black: #050505;
   --charcoal: #121212;
   --panel: #181818;
@@ -36,12 +37,13 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  min-height: 74px;
+  min-height: var(--header-height);
   padding: 10px max(18px, calc((100vw - 1120px) / 2));
   border-bottom: 1px solid rgba(48, 48, 48, 0.78);
   background: rgba(5, 5, 5, 0.96);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(12px);
+  transition: min-height 180ms ease, padding 180ms ease;
 }
 
 .site-logo-link {
@@ -58,6 +60,7 @@ body {
   filter:
     drop-shadow(0 0 8px rgba(49, 232, 255, 0.38))
     drop-shadow(0 0 12px rgba(255, 70, 98, 0.18));
+  transition: width 180ms ease, max-height 180ms ease;
 }
 
 .site-nav {
@@ -85,7 +88,7 @@ body {
 
 .sticky-helper-bar {
   position: sticky;
-  top: 74px;
+  top: var(--header-height);
   z-index: 25;
   padding: 9px 18px;
   border-bottom: 1px solid rgba(255, 209, 42, 0.35);
@@ -101,6 +104,7 @@ body {
     0 0 10px rgba(255, 209, 42, 0.42),
     0 0 18px rgba(49, 232, 255, 0.2);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+  transition: top 180ms ease;
 }
 
 button,
@@ -770,12 +774,30 @@ mark {
   color: inherit;
 }
 
+@media (min-width: 761px) {
+  body:not(.is-scrolled) {
+    --header-height: 196px;
+  }
+
+  body:not(.is-scrolled) .site-logo {
+    width: 172px;
+    max-height: 172px;
+  }
+
+  body.is-scrolled {
+    --header-height: 74px;
+  }
+}
+
 @media (max-width: 760px) {
+  body {
+    --header-height: 116px;
+  }
+
   .site-header {
     align-items: center;
     flex-direction: column;
     gap: 10px;
-    min-height: 116px;
     padding-top: 9px;
     padding-bottom: 10px;
   }
@@ -796,7 +818,6 @@ mark {
   }
 
   .sticky-helper-bar {
-    top: 116px;
     padding: 8px 14px;
     font-size: 0.86rem;
   }
