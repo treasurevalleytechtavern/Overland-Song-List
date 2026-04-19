@@ -4,9 +4,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Good Times Karaoke Song Search</title>
-    <link rel="stylesheet" href="styles.css?v=20260416-current-fields">
+    <link rel="stylesheet" href="styles.css?v=20260418-standalone-page">
   </head>
   <body>
+    <header class="site-header" aria-label="Overland Bar site navigation">
+      <a class="site-logo-link" href="https://overlandbar.com/" aria-label="Overland Bar home">
+        <img class="site-logo" src="assets/overland-bar-logo.png" alt="Overland Bar">
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="https://overlandbar.com/">Home</a>
+        <a href="https://overlandbar.com/menu">Menu</a>
+        <a href="https://overlandbar.com/review">Leave a Review</a>
+        <a href="report-song-issue.html">Report a Song Issue</a>
+      </nav>
+    </header>
+
+    <div class="sticky-helper-bar" role="note">
+      Found your song? Tell the KJ (karaoke DJ) by the stage.
+    </div>
+
     <main class="app-shell">
       <section class="search-band" aria-labelledby="page-title">
         <div class="brand-row">
@@ -33,11 +49,9 @@
               <span>Let Chance Decide</span>
             </button>
           </div>
+          <p class="filter-summary" id="filter-summary" aria-live="polite" hidden></p>
         </form>
 
-        <p class="helper-copy">
-          Pick your song, tell the host, and get ready.
-        </p>
       </section>
 
       <section class="results-band" id="results-section" aria-labelledby="results-title" hidden>
@@ -159,6 +173,11 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260416-current-fields"></script>
+    <footer class="site-credit-footer">
+      <p>Powered by <a href="https://treasurevalleytechtavern.com/">Treasure Valley Tech Tavern</a></p>
+      <a class="footer-report-link" href="report-song-issue.html">Report a Song Issue</a>
+    </footer>
+
+    <script src="app.js?v=20260418-ranking-score-tiebreak"></script>
   </body>
 </html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Report a Song Issue | Overland Bar</title>
+    <link rel="stylesheet" href="styles.css?v=20260418-song-issue">
+  </head>
+  <body>
+    <main class="app-shell issue-shell">
+      <section class="issue-band" aria-labelledby="issue-title">
+        <a class="issue-logo-link" href="index.html" aria-label="Back to karaoke song search">
+          <img class="issue-logo" src="assets/overland-bar-logo.png" alt="Overland Bar">
+        </a>
+
+        <div class="issue-heading">
+          <p class="eyebrow">Karaoke song book</p>
+          <h1 id="issue-title">Report a song issue.</h1>
+          <p class="helper-copy">
+            Tell us what needs fixing and we will take a look.
+          </p>
+        </div>
+
+        <form class="issue-form" id="song-issue-form">
+          <div class="form-field">
+            <label for="issue-song-name">Song name</label>
+            <input
+              id="issue-song-name"
+              name="songName"
+              type="text"
+              autocomplete="off"
+              required
+              placeholder="Song title"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="issue-details">Issue</label>
+            <textarea
+              id="issue-details"
+              name="issue"
+              required
+              rows="7"
+              placeholder="Tell us what is wrong with the song listing."
+            ></textarea>
+          </div>
+
+          <div class="issue-actions">
+            <button type="submit">Send</button>
+            <a class="secondary-link" href="index.html">Back to search</a>
+          </div>
+        </form>
+      </section>
+
+      <footer class="site-footer">
+        Powered by
+        <a href="https://treasurevalleytechtavern.com/">Treasure Valley Tech Tavern</a>
+      </footer>
+    </main>
+
+    <script>
+      const issueForm = document.querySelector("#song-issue-form");
+
+      issueForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const songName = document.querySelector("#issue-song-name").value.trim();
+        const issue = document.querySelector("#issue-details").value.trim();
+
+        if (!songName || !issue) {
+          issueForm.reportValidity();
+          return;
+        }
+
+        const subject = `Song issue reported: ${songName}`;
+        const body = [
+          `Song name: ${songName}`,
+          "",
+          "Issue:",
+          issue
+        ].join("\n");
+
+        window.location.href = `mailto:cambria@treasurevalleytechtavern.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      });
+    </script>
+  </body>
+</html>

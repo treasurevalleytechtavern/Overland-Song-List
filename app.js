@@ -2,13 +2,14 @@ const maxRenderedRows = 100;
 const minimumSearchLength = 2;
 const fuzzyResultLimit = 80;
 const requestSongUrl = "https://overlandbar.com/request-a-song";
-const songIndexUrl = "songs.index.json?v=20260416-current-fields";
-const songCsvUrl = "songs.csv?v=20260416-current-fields";
+const songIndexUrl = "songs.index.json?v=20260418-8680";
+const songCsvUrl = "songs.csv?v=20260418-8680";
 
 const searchForm = document.querySelector("#song-search-form");
 const searchInput = document.querySelector("#song-search");
 const clearButton = document.querySelector("#clear-search");
 const browseButtons = document.querySelectorAll(".browse-button");
+const filterSummary = document.querySelector("#filter-summary");
 const resultsSection = document.querySelector("#results-section");
 const resultsBody = document.querySelector("#song-results");
 const resultCount = document.querySelector("#result-count");
@@ -27,7 +28,7 @@ const diceMaleResults = document.querySelector("#dice-male-results");
 let songs = [];
 let searchTimer = 0;
 let requestNavigationStarted = false;
-let activeSearchField = "";
+let activeFilters = [];
 let currentSearchMatches = [];
 let currentSearchQuery = "";
 let visibleResultCount = maxRenderedRows;
@@ -36,6 +37,13 @@ const diceButtons = [topDiceButton, diceButton].filter(Boolean);
 diceButtons.forEach((button) => {
   button.disabled = true;
 });
+
+const filterFieldLabels = {
+  categories: "Genre",
+  decade: "Decade",
+  originalVocal: "Original vocal",
+  socialSinging: "Social singing"
+};
 
 function normalize(value) {
   return String(value || "")
@@ -109,6 +117,75 @@ function fieldMatchesQuery(song, fieldName, queryTerms) {
   );
 }
 
+function getFilterLabel(fieldName) {
+  return filterFieldLabels[fieldName] || fieldName;
+}
+
+function songMatchesFilter(song, filter) {
+  return fieldMatchesQuery(song, filter.field, tokenize(filter.value));
+}
+
+function songMatchesActiveFilters(song) {
+  return activeFilters.every((filter) => songMatchesFilter(song, filter));
+}
+
+function updateFilterSummary() {
+  if (!filterSummary) {
+    return;
+  }
+
+  if (activeFilters.length === 0) {
+    filterSummary.hidden = true;
+    filterSummary.textContent = "";
+    return;
+  }
+
+  filterSummary.textContent = activeFilters
+    .map((filter) => `${getFilterLabel(filter.field)}: ${filter.label}`)
+    .join("; ");
+  filterSummary.hidden = false;
+}
+
+function updateBrowseButtonStates() {
+  browseButtons.forEach((button) => {
+    const isActive = activeFilters.some((filter) =>
+      filter.field === button.dataset.field && filter.value === button.dataset.search
+    );
+
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function setFilterFromButton(button) {
+  const field = button.dataset.field || "";
+  const value = button.dataset.search || "";
+
+  if (!field || !value) {
+    return;
+  }
+
+  const existingIndex = activeFilters.findIndex((filter) => filter.field === field);
+  const existing = existingIndex === -1 ? null : activeFilters[existingIndex];
+
+  if (existing && existing.value === value) {
+    activeFilters.splice(existingIndex, 1);
+  } else if (existingIndex === -1) {
+    activeFilters.push({ field, value, label: button.textContent.trim() });
+  } else {
+    activeFilters[existingIndex] = { field, value, label: button.textContent.trim() };
+  }
+
+  updateFilterSummary();
+  updateBrowseButtonStates();
+}
+
+function clearFilters() {
+  activeFilters = [];
+  updateFilterSummary();
+  updateBrowseButtonStates();
+}
+
 function termMatchesText(term, text, tokens) {
   if (!term) {
     return false;
@@ -128,6 +205,15 @@ function termMatchesText(term, text, tokens) {
 function allTermsMatchText(queryTerms, text) {
   const tokens = tokenize(text);
   return queryTerms.length > 0 && queryTerms.every((term) => termMatchesText(term, text, tokens));
+}
+
+function parseRankingScore(value) {
+  const score = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(score) ? score : 0;
+}
+
+function getRankingScore(song) {
+  return typeof song.rankingScore === "number" ? song.rankingScore : 0;
 }
 
 function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") {
@@ -176,18 +262,6 @@ function getSearchScore(song, normalizedQuery, queryTerms, preferredField = "") 
   return null;
 }
 
-function findHeader(headers, candidates) {
-  for (let index = 0; index < candidates.length; index += 1) {
-    const headerIndex = headers.indexOf(candidates[index]);
-
-    if (headerIndex !== -1) {
-      return headerIndex;
-    }
-  }
-
-  return -1;
-}
-
 function indexSongs(nextSongs) {
   return nextSongs
     .filter((song) => song.title || song.artist)
@@ -199,6 +273,7 @@ function indexSongs(nextSongs) {
       const decade = String(song.decade || "").trim();
       const originalVocal = String(song.originalVocal || "").trim();
       const year = String(song.year || "").trim();
+      const rankingScore = parseRankingScore(song.rankingScore);
       const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
       const searchText = normalize(searchPieces.join(" "));
       const compactFields = [
@@ -219,6 +294,7 @@ function indexSongs(nextSongs) {
         decade,
         year,
         originalVocal,
+        rankingScore,
         searchText,
         compactFields,
         titleStarts: normalize(title),
@@ -255,6 +331,7 @@ function hydrateIndexedSongs(indexPayload) {
       const originalVocal = String(row[9] || "").trim();
       const year = String(row[10] || "").trim();
       const socialSinging = String(row[11] || "").trim();
+      const rankingScore = parseRankingScore(row[12]);
       const searchPieces = getSearchPieces({ title, artist, categories, socialSinging, decade, year, originalVocal });
       const searchText = String(row[3] || normalize(searchPieces.join(" ")));
       const compactFields = compactFieldSource
@@ -272,6 +349,7 @@ function hydrateIndexedSongs(indexPayload) {
         decade,
         year,
         originalVocal,
+        rankingScore,
         searchText,
         compactFields,
         fuzzyTerms,
@@ -598,6 +676,7 @@ function renderSimilarSongs(matches, query, queryTerms) {
     .sort((a, b) =>
       b.overlap - a.overlap
       || a.yearDistance - b.yearDistance
+      || getRankingScore(b.song) - getRankingScore(a.song)
       || a.song.title.localeCompare(b.song.title)
       || a.song.artist.localeCompare(b.song.artist)
     )
@@ -623,8 +702,10 @@ function renderSimilarSongs(matches, query, queryTerms) {
 function render() {
   const query = searchInput.value.trim();
   const normalizedQuery = normalize(query);
+  const hasTextQuery = normalizedQuery.length >= minimumSearchLength;
+  const hasFilters = activeFilters.length > 0;
 
-  if (normalizedQuery.length < minimumSearchLength) {
+  if (!hasTextQuery && !hasFilters) {
     hideSearchResults();
     return;
   }
@@ -634,7 +715,13 @@ function render() {
   let matchCount = 0;
 
   for (const song of songs) {
-    const score = getSearchScore(song, normalizedQuery, queryTerms, activeSearchField);
+    if (!songMatchesActiveFilters(song)) {
+      continue;
+    }
+
+    const score = hasTextQuery
+      ? getSearchScore(song, normalizedQuery, queryTerms)
+      : 0;
 
     if (score === null) {
       continue;
@@ -650,12 +737,16 @@ function render() {
 
   let usedTypoMatching = false;
 
-  if (queryTerms.length && matchCount === 0) {
+  if (hasTextQuery && queryTerms.length && matchCount === 0) {
     const exactMatches = new Set(rankedMatches.map((match) => match.song));
     const fuzzyMatches = [];
 
     for (const song of songs) {
       if (exactMatches.has(song)) {
+        continue;
+      }
+
+      if (!songMatchesActiveFilters(song)) {
         continue;
       }
 
@@ -667,11 +758,11 @@ function render() {
     }
 
     fuzzyMatches
-      .sort((a, b) => a.rank - b.rank || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
+      .sort((a, b) => a.rank - b.rank || getRankingScore(b.song) - getRankingScore(a.song) || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
       .slice(0, fuzzyResultLimit)
       .forEach((match) => rankedMatches.push({
         song: match.song,
-        rank: getSearchScore(match.song, normalizedQuery, queryTerms, activeSearchField) ?? 9
+        rank: getSearchScore(match.song, normalizedQuery, queryTerms) ?? 9
       }));
 
     matchCount = rankedMatches.length;
@@ -679,6 +770,26 @@ function render() {
   }
 
   if (matchCount === 0) {
+    if (!hasTextQuery && hasFilters) {
+      if (resultsSection) {
+        resultsSection.hidden = false;
+      }
+      resultsBody.innerHTML = "";
+      currentSearchMatches = [];
+      currentSearchQuery = "";
+      visibleResultCount = maxRenderedRows;
+      if (loadMoreButton) {
+        loadMoreButton.hidden = true;
+      }
+      if (similarPanel) {
+        similarPanel.hidden = true;
+      }
+      emptyState.textContent = "No songs match those filters.";
+      emptyState.hidden = false;
+      resultCount.textContent = "0 songs";
+      return;
+    }
+
     renderRequestSong(query);
     return;
   }
@@ -690,7 +801,7 @@ function render() {
   currentSearchQuery = query;
   visibleResultCount = maxRenderedRows;
   currentSearchMatches = rankedMatches
-    .sort((a, b) => a.rank - b.rank || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
+    .sort((a, b) => a.rank - b.rank || getRankingScore(b.song) - getRankingScore(a.song) || a.song.title.localeCompare(b.song.title) || a.song.artist.localeCompare(b.song.artist))
     .map((match) => match.song);
 
   renderVisibleSearchResults(matchCount, usedTypoMatching);
@@ -738,11 +849,14 @@ function parseCsv(csvText) {
   const headers = headerRow.map((item) => normalize(item));
   const titleIndex = headers.indexOf("title");
   const artistIndex = headers.indexOf("artist");
-  const categoriesIndex = findHeader(headers, ["categories", "category"]);
-  const socialSingingIndex = findHeader(headers, ["social singing", "social_singing", "singing type", "singing_type"]);
-  const decadeIndex = findHeader(headers, ["decade", "decades"]);
-  const yearIndex = findHeader(headers, ["year", "release year", "release_year", "released"]);
-  const originalVocalIndex = findHeader(headers, ["original vocal", "original_vocal", "vocal", "vocals", "voice"]);
+  const categoriesIndex = headers.indexOf("categories");
+  const socialSingingIndex = headers.indexOf("social singing");
+  const decadeIndex = headers.indexOf("decade");
+  const yearIndex = headers.indexOf("year");
+  const originalVocalIndex = headers.indexOf("original vocal");
+  const rankingScoreIndex = headers.includes("popularity score")
+    ? headers.indexOf("popularity score")
+    : headers.indexOf("popularity");
   if (titleIndex === -1 || artistIndex === -1) {
     throw new Error("CSV must include title and artist columns.");
   }
@@ -754,7 +868,8 @@ function parseCsv(csvText) {
     socialSinging: socialSingingIndex === -1 ? "" : items[socialSingingIndex] || "",
     decade: decadeIndex === -1 ? "" : items[decadeIndex] || "",
     year: yearIndex === -1 ? "" : items[yearIndex] || "",
-    originalVocal: originalVocalIndex === -1 ? "" : items[originalVocalIndex] || ""
+    originalVocal: originalVocalIndex === -1 ? "" : items[originalVocalIndex] || "",
+    rankingScore: rankingScoreIndex === -1 ? "" : items[rankingScoreIndex] || ""
   }));
 }
 
@@ -820,28 +935,23 @@ async function loadInitialSongs() {
 }
 
 searchInput.addEventListener("input", () => {
-  activeSearchField = "";
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(render, 80);
 });
 
 browseButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    searchInput.value = button.dataset.search || "";
-    activeSearchField = button.dataset.field || "";
+    setFilterFromButton(button);
     window.clearTimeout(searchTimer);
     render();
-    searchInput.focus();
   });
 });
 
 searchInput.addEventListener("search", () => {
-  activeSearchField = "";
   render();
 });
 searchInput.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
-    activeSearchField = "";
     render();
   }
 });
@@ -852,7 +962,6 @@ emptyState.addEventListener("click", handleRequestSongActivation);
 if (searchForm) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    activeSearchField = "";
     window.clearTimeout(searchTimer);
     render();
   });
@@ -860,7 +969,7 @@ if (searchForm) {
 
 clearButton.addEventListener("click", () => {
   searchInput.value = "";
-  activeSearchField = "";
+  clearFilters();
   searchInput.focus();
   render();
 });
